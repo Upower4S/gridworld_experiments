@@ -1,0 +1,7 @@
+Take a CoT prefix, we added some auxiliary tokens to force the model to give an answer. I want to train a new type of probe.
+the input is activations of those auxiliary tokens at ALL layers. the probe uses transformer model, and input to the transformer 
+is activations of different layers. so the token position is now numbe of layers. The goal of this probe is to measure how does the
+transition of information through layers varies for different prefix. a conjecture is that case with high and low commitement has different
+transition process. so the target could be the level of commitement. think about what could be a good target. I think a good target could be 
+something aligning with commitement.think about the architecture of the probe and how to arrange activations of auxiliary tokens into the inputs of
+the model.
