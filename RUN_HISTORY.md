@@ -5411,3 +5411,67 @@ Artifacts: outputs/conjectures/c5_sentence_functions/{labels_checkpoint.jsonl,
 sentence_labels.parquet, function_stats.csv, event_aligned.csv, placebo_jumps.csv,
 gold_sample.csv, gold_key.csv, gold_labeled.csv, agreement.csv, report.md};
 figures/c5_corrected/sentence_functions.png.
+
+## 2026-08-13 — Script 95: optimal-action linear probes along the CoT, versus q
+
+Command (worktree `optimal-action-probe`, data read from primary checkout):
+`interp/.venv/bin/python scripts/conceptual_belief_space/95_optimal_action_probe_along_cot.py --input_spec {window_mean,last_token}`
+
+Repo now has git (initial commit a0b773c: code/paper/docs tracked, data dirs
+untracked via .gitignore; NOTE: .git carried 71 GiB of pre-existing unreferenced
+pack objects from before the first commit — candidate for `git gc --prune=now`).
+
+**Design.** Labels = BFS optimal-action SETS over (row,col,has_key) (990 steps
+|O|=1, 286 |O|=2; agent in O_s 98.28%, matching the audit; uniform chance
+0.306). Metric = top-1-in-set, identical for probe and q; soft targets 1/|O|.
+Panel = 10 relative bins x 1276 steps, one nearest prefix per (step,bin) —
+identical composition and label distribution per bin (zero within-bin prefix
+reuse). Nested trajectory-grouped CV (5 outer, 4 inner; per-fold layer by inner
+CV -> layers [21,17,23,23,23]; per-bin C by inner CV), OOF evaluation, 2000-rep
+trajectory-cluster bootstrap CIs. Linear readout 2,052 params. Contract: inputs
+are activations only (12-token CoT window of the shards; no forced tokens).
+
+**Scores (top-1-in-set, chance 0.306, permutation floor 0.29-0.33):**
+
+| bin center | q | probe window_mean | probe last_token |
+| --- | --- | --- | --- |
+| 0.05 | 0.502 | 0.343 | 0.299 |
+| 0.25 | 0.651 | 0.341 | 0.324 |
+| 0.45 | 0.763 | 0.367 | 0.313 |
+| 0.65 | 0.879 | 0.409 | 0.339 |
+| 0.85 | 0.958 | 0.454 | 0.394 |
+| 0.95 | 0.976 | 0.514 | 0.389 |
+
+probe-q gap widens from -0.16 (bin 0) to -0.51 (bin 8), narrowing slightly to
+-0.46 at bin 9; all gaps' cluster CIs exclude 0. Strict (|O|=1) and multi
+(|O|=2) strata and macro-OvR AUC in curves.csv; heatmap: monotone-ish depth
+gradient, best layer 23 (window_mean bin-9 0.544), early layers ~chance.
+
+**Findings.**
+1. Single last-token features are NEAR-NULL (macro-AUC 0.49-0.58 across all
+   layers/bins) — the upcoming/optimal action is not linearly concentrated in
+   the final CoT token's residual. Bin-9 diagnostic with positive control
+   (predicting q's own argmax: 0.28 last-token vs 0.49 window-mean) rules out
+   a pipeline artifact.
+2. Window-mean decodability RISES along the CoT (0.343 -> 0.514): a correct
+   action becomes progressively more linearly readable as reasoning proceeds.
+   No early plateau: the "linear probe knows early while q converges late"
+   hypothesis is REJECTED — at the linear level the representation does not
+   lead the belief.
+3. The model's own forced readout q dominates the probe EVERYWHERE (0.50 at
+   bin 0 already, vs 0.34): the answer the model can extract from its state
+   far exceeds what is linearly present in the window at every point, and the
+   gap GROWS through mid-chain. Consistent with the paper's redundant-
+   reconstruction picture: the belief is computed at readout time (via the
+   forced suffix attending over the full context), not stored linearly in the
+   local window.
+4. Caveat (stated in advance): agent action in O_s at 98.3% means optimal- and
+   upcoming-action decoding are confounded; claims are about "a correct
+   action", and the informative object is the probe-vs-q timing/level gap.
+
+Artifacts: outputs/conceptual_belief_space/optimal_action_probe_along_cot/
+spec_{window_mean,last_token}/{curves.csv,layer_bin_heatmap.csv,panel.parquet,
+optimal_sets.parquet,absolute_token_curves.csv,report.md};
+figures/conceptual_belief_space/optimal_action_probe_vs_q_{window_mean,
+last_token}.png, optimal_action_probe_layer_heatmap_*.png, and the combined
+figure optimal_action_probe_vs_q_combined.png.
