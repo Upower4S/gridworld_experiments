@@ -1,0 +1,32 @@
+# Large data and derived artifacts — never tracked
+outputs/
+figures/
+trajectories_key_door_100/
+bad_traj_natural_100/
+together_ai_*/
+interp/
+lowDim/
+tmp/
+
+# Caches and OS noise
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+
+# Claude session machinery
+.claude/worktrees/
+
+# Generated documents (sources are the .md/.tex files)
+*.docx
+gridworld_commitment_report_google_docs_ready.pdf
+
+# LaTeX build artifacts (main.pdf is tracked deliberately)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/b*.log
