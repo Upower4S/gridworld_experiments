@@ -5411,3 +5411,61 @@ Artifacts: outputs/conjectures/c5_sentence_functions/{labels_checkpoint.jsonl,
 sentence_labels.parquet, function_stats.csv, event_aligned.csv, placebo_jumps.csv,
 gold_sample.csv, gold_key.csv, gold_labeled.csv, agreement.csv, report.md};
 figures/c5_corrected/sentence_functions.png.
+
+## 2026-08-14 — Script 18: coarse-4 sentence functions, 621-decision corpus — the commitment-point distribution shift
+
+Goal (user): pick the best taxonomy x reasoning-effort scheme, then annotate enough of
+the corpus to get the before/after-commitment function distributions. User capped the
+annotation at "half or enough"; the checkpoint stopped at 88,000/142,962 sentences
+(61.6%), covering the first 621 of 1007 usable decisions completely — final numbers
+below are on those 621.
+
+**Scheme selection (five configurations on the 152-sentence blind gold):**
+| config | parse | accuracy |
+| 8-class x low | 1.00 | 0.566 |
+| 8-class x high | 0.34 | 0.673 |
+| coarse-4 v2 x low | 1.00 | 0.724  <- SELECTED |
+| coarse-4 v2 x medium | 0.51 | 0.718 (zero gain, 1/16 speed) |
+| coarse-4 v2 x high | 0.47 | 0.859 (quality ceiling; ~2.6 sent/min, infeasible) |
+Coarse-4 v2 taxonomy (frozen after two documented pilot rounds in
+outputs/conjectures/c5_sentence_functions/coarse4_pilot/): W world-reading (incl.
+derived world facts), S solving, M meta-checking, A concluding/answering
+(solution-level). Per-class precision at low: A 0.91 / S 0.78 / W 0.73 / M 0.32.
+M below claim grade in ALL five configs (0.21-0.50) — 20B cannot separate checking
+from solving; M reported as exploratory, verification claims stay with the regex
+class. Known W/S boundary caveat (user-raised, acknowledged in analysis): both
+classes contain inference; the line is the *product* (world fact vs solution
+fragment); ~25% cross-assignment noise, but the A-vs-rest contrast (A precision
+0.91) is boundary-free, and W-collapse/S-rise are complementary shares.
+
+**Command**: `interp/.venv/bin/python scripts/18_coarse4_full_annotation.py
+--phase classify --effort low` (worktree script; DATA_ROOT resolves to primary
+checkout), then `--phase analyze`. Checkpoint labels_low.jsonl is resumable if the
+remaining 386 decisions are ever wanted.
+
+**Results (621 decisions, trajectory-cluster bootstrap 95% CIs):**
+| function | head | tail | diff [CI] |
+| W world-reading | 0.692 | 0.299 | -0.393 [-0.408, -0.378] |
+| S solving | 0.240 | 0.451 | +0.211 [+0.196, +0.226] |
+| M meta-checking* | 0.057 | 0.137 | +0.080 [+0.071, +0.089] (*precision 0.32) |
+| A concluding/answering | 0.011 | 0.113 | +0.102 [+0.095, +0.109] |
+
+**Event-aligned placebo verdicts** (jump in ±800 chars at T_stab):
+- W: -0.175 vs placebo [-0.139, -0.079], p=0.01 — collapses AT the decision.
+- S: +0.124 vs [+0.043, +0.105], p=0.01 — jumps AT the decision.
+- M: p=0.41; A: p=0.14 — end-anchored, no decision-locked excess (matches the
+  regex concluding/answer-naming verdicts from script 16).
+
+**Conclusion**: before commitment ~69% of sentences read the world; after, ~45%
+walk the solution and ~11% state conclusions, with world-reading collapsing to
+~30% — and the W->S switch is locked to the stabilization moment while
+conclusion-stating belongs to the chain end. Fifth independent line of evidence
+(after validated regex, Fightin' Words, embedding survivors, 8-class survivors)
+for the same phase transition.
+
+Artifacts: outputs/conjectures/c5_sentence_functions_coarse4/{labels_low.jsonl,
+sentence_labels.parquet, function_stats.csv, event_aligned.csv, placebo_jumps.csv,
+report.md}; figures/c5_corrected/coarse4_functions.png; effort sweep in
+outputs/conjectures/c5_sentence_functions/coarse4_pilot/ +
+gold_coarse4_effort_sweep.csv. Script: scripts/18_coarse4_full_annotation.py
+(committed on worktree branch worktree-sparkling-churning-dream).

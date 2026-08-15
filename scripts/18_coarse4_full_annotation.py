@@ -274,13 +274,17 @@ def analyze(args, s17, sub: pd.DataFrame, frame: pd.DataFrame) -> None:
     jumps = pd.DataFrame(jump_rows)
     jumps.to_csv(args.out_dir / "placebo_jumps.csv", index=False)
 
-    plot(stats, curves, jumps, args.figure_dir / "coarse4_functions.png")
+    plot(stats, curves, jumps, args.figure_dir / "coarse4_functions.png",
+         n_decisions=int(stats.n_steps.iloc[0]))
 
+    n_labeled_steps = int(frame.step_row.nunique())
     lines = [
-        "# Coarse-4 sentence functions, full corpus (script 18)",
+        "# Coarse-4 sentence functions (script 18)",
         "",
-        f"- effort {args.effort}; {len(frame)} sentences from {n} decisions; "
-        f"{n_missing} unparsed.",
+        f"- effort {args.effort}; {len(frame)} labelled sentences covering "
+        f"{n_labeled_steps} decisions (of {n} usable; annotation checkpointed, "
+        f"stopped at user request once >half the corpus was covered); "
+        f"{n_missing} sentences outside the checkpoint or unparsed.",
         "- Instrument (gold-152): precision A 0.91 / S 0.78 / W 0.73 / M 0.32.",
         "  M is exploratory only; verification claims rest on the regex class.",
         "",
@@ -292,7 +296,7 @@ def analyze(args, s17, sub: pd.DataFrame, frame: pd.DataFrame) -> None:
     print(jumps.round(3).to_string(index=False))
 
 
-def plot(stats, curves, jumps, path: Path) -> None:
+def plot(stats, curves, jumps, path: Path, n_decisions: int = 0) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -331,8 +335,9 @@ def plot(stats, curves, jumps, path: Path) -> None:
                      for r in order.itertuples()], fontsize=9.5)
     style(axis, xlabel="tail share − head share of sentences (95% cluster CI)"
           "      * precision 0.32 on blind gold — exploratory only")
+    n_txt = f"{n_decisions} decisions" if n_decisions else "coarse-4"
     axis.set_title("Sentence functions before vs after the answer settles "
-                   "(coarse-4, full corpus)", color=INK, fontsize=11)
+                   f"(coarse-4, {n_txt}, gpt-oss-20b annotator)", color=INK, fontsize=11)
 
     for p, fn in enumerate([FUNCTION_NAMES[c] for c in FUNCTIONS]):
         axis = figure.add_subplot(grid[1, p])
