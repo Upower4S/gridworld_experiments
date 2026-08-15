@@ -5469,3 +5469,24 @@ report.md}; figures/c5_corrected/coarse4_functions.png; effort sweep in
 outputs/conjectures/c5_sentence_functions/coarse4_pilot/ +
 gold_coarse4_effort_sweep.csv. Script: scripts/18_coarse4_full_annotation.py
 (committed on worktree branch worktree-sparkling-churning-dream).
+
+## 2026-08-14 — Script 18 addendum: annotation resumed and completed on the FULL corpus
+
+User asked to finish the run. Resumed from the 88,000-sentence checkpoint; completed
+142,962/142,962 (1,585 = 1.1% unparsed after retry). Final distributions on 1004
+decisions (3 of 1007 dropped: no labelled sentences on one side of T_stab):
+
+| function | head | tail | diff [95% cluster CI] |
+| W world-reading | 0.683 | 0.291 | -0.392 [-0.406, -0.379] |
+| S solving | 0.249 | 0.450 | +0.202 [+0.186, +0.217] |
+| M meta-checking* | 0.057 | 0.139 | +0.082 [+0.075, +0.088] |
+| A concluding/answering | 0.011 | 0.120 | +0.109 [+0.103, +0.114] |
+
+Event-aligned jumps at T_stab vs shuffled-stabilization placebo:
+W -0.172 vs [-0.135, -0.088] p=0.01; S +0.117 vs [+0.048, +0.097] p=0.01;
+M +0.032 vs [+0.010, +0.031] p=0.05 (borderline — first hint of a decision-locked
+meta-checking excess, but M precision is 0.32 so exploratory only);
+A +0.022 vs [+0.012, +0.025] p=0.20 (end-anchored, unchanged).
+
+All conclusions from the 621-decision snapshot unchanged; CIs tightened. Figure
+regenerated (title now "1004 decisions"): figures/c5_corrected/coarse4_functions.png.
