@@ -5475,3 +5475,46 @@ optimal_sets.parquet,absolute_token_curves.csv,report.md};
 figures/conceptual_belief_space/optimal_action_probe_vs_q_{window_mean,
 last_token}.png, optimal_action_probe_layer_heatmap_*.png, and the combined
 figure optimal_action_probe_vs_q_combined.png.
+
+## 2026-08-16 — Script 96: poster probe family (state + agent action) along the CoT
+
+Command (worktree `state-probes`, branch based on worktree-optimal-action-probe):
+`interp/.venv/bin/python scripts/conceptual_belief_space/96_state_probes_along_cot.py`
+
+Trains the Okcu et al. belief-action-gap poster's probe family as full curves
+along the CoT under script 95's protocol (same 1276x10 fixed panel, window_mean
+input, per-(target,fold) layer by inner grouped CV on bins {1,4,8}, C=1, OOF,
+2000-rep cluster CIs). Targets are step-level constants: agent_action (4c),
+agent_row+agent_col (9c each; location = both correct), has_key (2c, prior
+0.700), door_open (2c, prior 0.584). Base rates: has_key 70%, door open 41.6%.
+
+**Curves (OOF accuracy, bin 0 -> bin 9):**
+- agent_action: 0.289 -> 0.391 (prior 0.243) — rises, parallels the optimal-set
+  probe; chosen layers L12-17.
+- location exact cell: FLAT 0.043-0.067 (prior 0.035); row 0.19-0.25 and col
+  0.20-0.23 vs ~0.2 priors — **essentially NULL at every position**.
+- has_key: 0.901 at bin 0, dip to 0.784 mid, 0.843 late (prior 0.700) — highest
+  at the very START of reasoning; chosen layers L13-15.
+- door_open: 0.837 -> 0.923 (prior 0.584) — rises along the chain; layers L9-13.
+
+**Reading.** The working window carries persistent BINARY task facts (key, door)
+well above prior at every point, but does NOT carry the agent's current
+coordinates linearly on held-out maps — despite coordinate pairs being the
+densest token type in the text. The poster's location 92.8% (pre-reasoning,
+single map, observation tokens in probe reach) vs our ~prior (multi-map,
+reasoning-window-only) localizes their signal to observation re-encoding +
+fixed-map memorization, consistent with the script-95 leakage analysis
+(observation-only linear probe: 0.601 held-out maps / 0.736 shared maps).
+My stated prediction that location would be HIGH early and collapse after
+T_stab was WRONG — the window's coordinate mentions are about discussed cells,
+not linearly tagged as "agent is here", so current-position readout never
+materializes at any point. door_open's rise partly tracks phase (door opens
+mid-trajectory; correlated with progress), noted as a confound.
+
+Caveat (stated in script): window re-encodes currently-written text; curves
+measure state information present in the working window, not belief stored
+outside the text.
+
+Artifacts: outputs/conceptual_belief_space/state_probes_along_cot/{curves.csv,
+report.md}; figures/conceptual_belief_space/poster_probes_along_cot.png
+(2-panel: action probes incl. q + optimal-set overlay; world-state probes).
