@@ -5475,3 +5475,41 @@ optimal_sets.parquet,absolute_token_curves.csv,report.md};
 figures/conceptual_belief_space/optimal_action_probe_vs_q_{window_mean,
 last_token}.png, optimal_action_probe_layer_heatmap_*.png, and the combined
 figure optimal_action_probe_vs_q_combined.png.
+
+## 2026-08-16 — Script 95 addendum: layers_concat input spec (user request: multi-layer input)
+
+Command: `interp/.venv/bin/python scripts/conceptual_belief_space/95_optimal_action_probe_along_cot.py --input_spec layers_concat`
+Input: 12-token window mean per layer, ALL 24 layers concatenated (12,288-d;
+49,156-parameter linear readout, still << 1M contract). No layer selection or
+heatmap stage (not applicable); same panel/folds/C-grid/OOF protocol.
+
+Top-1-in-set by bin center (chance 0.306; single-best-layer window_mean in
+parens): 0.05: 0.349 (0.343) · 0.45: 0.365 (0.367) · 0.75: 0.406 (0.422) ·
+0.85: 0.460 (0.454) · 0.95: **0.554** (0.514). Macro-AUC bin9 0.700 (0.681).
+probe-q gap at bin 9: -0.422 [-0.447, -0.397].
+
+**Reading.** Multi-layer concatenation adds nothing early, ~+0.04 at the chain
+end — single-layer window-mean was already near the linear ceiling. The
+qualitative conclusions are unchanged and now capacity-robust: (1) linear
+decodability of a correct action RISES along the CoT (no early plateau; the
+representation does not lead the belief), and (2) q dominates every probe at
+every position (0.976 vs 0.554 at the final bin) — the model's own readout
+extracts far more than is linearly present in the reasoning-window activations
+at ANY capacity we allow under the contract, supporting readout-time
+reconstruction over stored-plan interpretations.
+
+Also this date: observation-only leakage baseline (tmp scratch, grid one-hots
+405-d + carrying_key, same soft-target probe): held-out MAPS 0.601, held-out
+STEPS with maps shared 0.736 — i.e., a probe with access to the re-encoded
+observation beats every activation probe with no model involvement at all.
+Context: explains the 97.6% optimal-action probe on the Okcu et al. poster
+("Formalising, Probing, and Intervening on the Belief-Action Gap In Agents",
+MiniGrid DoorKey, held-out-STATE split, state linearly decodable 92.8-100%
+pre-reasoning): on a fixed map A* is a lookup table over the state, linear in
+one-hot state features, so state-decodability ~ A*-decodability by
+construction; our contract (grid tokens excluded from inputs, layout-grouped
+splits) fences out exactly this channel.
+
+Artifacts: outputs/conceptual_belief_space/optimal_action_probe_along_cot/
+spec_layers_concat/*; combined 4-curve figure
+figures/conceptual_belief_space/optimal_action_probe_vs_q_combined.png.

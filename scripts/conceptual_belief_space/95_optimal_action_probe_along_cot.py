@@ -101,12 +101,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--figure_dir", type=Path,
                         default=DATA_ROOT / "figures/conceptual_belief_space")
     parser.add_argument("--n_boot", type=int, default=N_BOOT)
-    parser.add_argument("--input_spec", choices=("window_mean", "last_token"),
+    parser.add_argument("--input_spec",
+                        choices=("window_mean", "last_token", "layers_concat"),
                         default="window_mean",
                         help="probe input: masked mean over the 12-token CoT window "
                              "(primary; the bin-9 diagnostic showed last-token "
                              "features are near-null while window-mean reaches "
-                             "0.544) or the last valid CoT token")
+                             "0.544), the last valid CoT token, or the window "
+                             "mean of ALL 24 layers concatenated (12,288-d, "
+                             "49,156-parameter readout, still << 1M)")
     parser.add_argument("--abs_bin_width", type=int, default=60,
                         help="absolute-token appendix: bin width in tokens")
     parser.add_argument("--abs_min_tokens", type=int, default=480,
@@ -330,7 +333,13 @@ def main() -> int:
     print(f"  {n_steps} steps x {N_BINS} bins; worst within-bin prefix reuse {reuse:.3f}")
 
     print("features ...", flush=True)
-    features = extract_features(panel, args.input_spec)
+    features = extract_features(
+        panel, "window_mean" if args.input_spec == "layers_concat" else args.input_spec)
+    concat = args.input_spec == "layers_concat"
+    features_flat = features.reshape(len(features), -1) if concat else None
+
+    def take(rows: np.ndarray, layer) -> np.ndarray:
+        return features_flat[rows] if concat else features[rows, layer]
 
     q_cols = [f"extracted_q_{a}" for a in ACTIONS]
     q_probs = panel[q_cols].to_numpy(dtype=float)
@@ -357,29 +366,35 @@ def main() -> int:
         return np.flatnonzero(keep)
 
     # ---- Layer x bin heatmap at fixed C (outer-fold OOF accuracy) ----------
-    print("layer x bin heatmap ...", flush=True)
     heat = np.zeros((24, N_BINS))
-    for layer in range(24):
+    layer_iter = [] if concat else range(24)
+    if not concat:
+        print("layer x bin heatmap ...", flush=True)
+    for layer in layer_iter:
         hits = np.zeros(len(panel))
         for b in range(N_BINS):
             for f in range(N_FOLDS):
                 tr = rows_of(b, f, True)
                 te = rows_of(b, f, False)
-                scaler, model = fit_probe(features[tr, layer],
+                scaler, model = fit_probe(take(tr, layer),
                                           [sets_all[i] for i in tr], FIXED_C)
-                hits[te] = hit_in_set(probe_probs(scaler, model, features[te, layer]),
+                hits[te] = hit_in_set(probe_probs(scaler, model, take(te, layer)),
                                       [sets_all[i] for i in te])
         for b in range(N_BINS):
             heat[layer, b] = hits[bins == b].mean()
         print(f"  layer {layer:2d}: mean {heat[layer].mean():.3f}", flush=True)
-    pd.DataFrame(heat, columns=[f"bin{b}" for b in range(N_BINS)]) \
-        .assign(layer=range(24)).to_csv(args.out_dir / "layer_bin_heatmap.csv",
-                                        index=False)
+    if not concat:
+        pd.DataFrame(heat, columns=[f"bin{b}" for b in range(N_BINS)]) \
+            .assign(layer=range(24)).to_csv(
+                args.out_dir / "layer_bin_heatmap.csv", index=False)
 
     # ---- Per-fold layer choice on TRAINING data only (inner grouped CV) ----
-    print("per-fold layer selection ...", flush=True)
     chosen_layers = []
-    for f in range(N_FOLDS):
+    if concat:
+        chosen_layers = [None] * N_FOLDS
+    else:
+        print("per-fold layer selection ...", flush=True)
+    for f in [] if concat else range(N_FOLDS):
         train_traj = dec_traj[fold_pairs[f][0]]
         inner_pairs = list(grouped_folds(train_traj, N_INNER,
                                          np.random.default_rng(SEED + 100 + f)))
@@ -394,10 +409,10 @@ def main() -> int:
                                             & np.isin(groups_step, itr_traj))
                     row_te = np.flatnonzero((bins == b)
                                             & np.isin(groups_step, ite_traj))
-                    scaler, model = fit_probe(features[row_tr, layer],
+                    scaler, model = fit_probe(take(row_tr, layer),
                                               [sets_all[i] for i in row_tr], FIXED_C)
                     accs.append(hit_in_set(
-                        probe_probs(scaler, model, features[row_te, layer]),
+                        probe_probs(scaler, model, take(row_te, layer)),
                         [sets_all[i] for i in row_te]).mean())
             scores[layer] = float(np.mean(accs))
         chosen_layers.append(int(scores.argmax()))
@@ -425,19 +440,19 @@ def main() -> int:
                                             & np.isin(groups_step, itr_traj))
                     row_te = np.flatnonzero((bins == b)
                                             & np.isin(groups_step, ite_traj))
-                    scaler, model = fit_probe(features[row_tr, layer],
+                    scaler, model = fit_probe(take(row_tr, layer),
                                               [sets_all[i] for i in row_tr], c_value)
                     accs.append(hit_in_set(
-                        probe_probs(scaler, model, features[row_te, layer]),
+                        probe_probs(scaler, model, take(row_te, layer)),
                         [sets_all[i] for i in row_te]).mean())
                 if np.mean(accs) > best_acc:
                     best_acc, best_c = float(np.mean(accs)), c_value
             chosen_c[f, b] = best_c
             tr = rows_of(b, f, True)
             te = rows_of(b, f, False)
-            scaler, model = fit_probe(features[tr, layer],
+            scaler, model = fit_probe(take(tr, layer),
                                       [sets_all[i] for i in tr], best_c)
-            probs = probe_probs(scaler, model, features[te, layer])
+            probs = probe_probs(scaler, model, take(te, layer))
             probe_prob_store[te] = probs
             probe_hits[te] = hit_in_set(probs, [sets_all[i] for i in te])
         print(f"  fold {f} done (layer {layer}, C {chosen_c[f]})", flush=True)
@@ -467,9 +482,9 @@ def main() -> int:
         for b in range(N_BINS):
             tr = rows_of(b, f, True)
             te = rows_of(b, f, False)
-            scaler, model = fit_probe(features[tr, layer],
+            scaler, model = fit_probe(take(tr, layer),
                                       [perm_sets[i] for i in tr], FIXED_C)
-            perm_hits[te] = hit_in_set(probe_probs(scaler, model, features[te, layer]),
+            perm_hits[te] = hit_in_set(probe_probs(scaler, model, take(te, layer)),
                                        [perm_sets[i] for i in te])
     panel["prior_hit"] = prior_hits
     panel["perm_hit"] = perm_hits
@@ -558,10 +573,11 @@ def main() -> int:
     print("figures ...", flush=True)
     plot_curves(curves, chosen_layers,
                 args.figure_dir / f"optimal_action_probe_vs_q_{args.input_spec}.png")
-    plot_heatmap(heat, args.figure_dir
-                 / f"optimal_action_probe_layer_heatmap_{args.input_spec}.png")
+    if not concat:
+        plot_heatmap(heat, args.figure_dir
+                     / f"optimal_action_probe_layer_heatmap_{args.input_spec}.png")
 
-    n_params = 512 * 4 + 4
+    n_params = (24 * 512 if concat else 512) * 4 + 4
     lines = [
         "# Optimal-action linear probes along the CoT, versus q (script 95)",
         "",
