@@ -5411,3 +5411,1263 @@ Artifacts: outputs/conjectures/c5_sentence_functions/{labels_checkpoint.jsonl,
 sentence_labels.parquet, function_stats.csv, event_aligned.csv, placebo_jumps.csv,
 gold_sample.csv, gold_key.csv, gold_labeled.csv, agreement.csv, report.md};
 figures/c5_corrected/sentence_functions.png.
+
+## 2026-08-30 — Workshop paper: behavioural manifold + commitment-along-CoT written into §4
+
+Edited `_IAB_Workshop_2026__Belief_action_gap/workshop_main.tex` (the joint IAB workshop
+draft) to add the repo's two headline behavioural results to §4 "Beliefs and Actions
+Throughout Reasoning". All numbers are from the faithful extracted-label pipeline (D0/D1,
+2026-07-23); no stored-label quantities were used.
+
+Additions:
+- §4 intro: prefix-thinning sentence (≤80 cuts/decision, median gap 20 tokens).
+- §4.1: forced-suffix parenthetical (12 tokens opening the answer JSON, validated
+  token-exactly).
+- §4.2 new "The behavioural belief manifold" paragraph + Figure 5 (two panels:
+  `behavior_manifold_star.png` = `figures/behavior_extracted/pca_by_top_action.png`,
+  `behavior_manifold_trajectories.png` = `.../example_manifold_trajectories.png`).
+  Framed explicitly as output geometry (CLR = centred logits; radius ~ entropy-commitment
+  Spearman 0.78, centroid radius ratio 0.92, RIGHT prior 79.5%), with the sentence
+  disclaiming any activation-geometry claim (per the 2026-07-25 cylinder results).
+- §4.2 new "Commitment to the eventual action" paragraph: rise 0.35 → 0.92 by progress
+  bins, 0.34 at the empty prefix, final-prefix agreement 100.0%, pre-verbal control
+  (31,723 prefixes, 0.35 → 0.92, top==final 54.9%).
+- §4.2 "Three clocks" paragraph: Tverb 0.253 < Tstab 0.494 < Tperm(0.8) 0.648, 35.6%
+  stabilize before first mention; kept the collaborators' settled-textual-commitment
+  sentences but flagged them with a \td (their 753/59.0%/99.87%/523/823 numbers are not
+  in any repo report — must be verified against extracted labels; canonical tail is
+  524/887).
+- §4.2 "Half the chain is post-decision": 50.6% median tail (524/887 tokens), length-
+  quartile effect 0.32 vs 0.60, QA-analogue citation (new ref.bib entry `boundary2026`
+  = arXiv 2606.13603), thinning lower/upper-bound caveat.
+- §4.2 "Stabilization is gradual and imperfectly absorbing": hazard 0.133 → 0.019,
+  6.0 switches/decision, later-switch prob ≈1 (commitment<0.35) → 0.089 (top decile),
+  per-action timing RIGHT 0.393 / DOWN 0.609. Figure 6 = `clocks.png` + `hazard.png`
+  (copied from `paper/figures/`, the peer-reviewed solo-paper versions).
+- Fixed pre-existing undefined reference: added `\label{sec:causal}` to §5.
+- Cluster paragraph opening lightly rewritten to forward-reference §4.4.
+
+Compile: pdflatex+bibtex clean, 0 undefined refs/citations. Pre-existing issues left for
+collaborators: `dblblindworkshop` is not a declared option of the bundled
+`neurips_2026.sty` (only `workshop`, `main`, ... exist — option is ignored with a LaTeX
+error at load), and `ref.bib` has duplicate entries (ziebart2008maximum,
+gurnee2024language) that bibtex skips with warnings.
+
+## 2026-08-30 — Coarse-4 sentence functions: provenance logged + added to workshop paper §4.2
+
+**Provenance reconstruction (the run itself was never logged).** The coarse-4
+sentence-function analysis exists at `outputs/conjectures/c5_sentence_functions_coarse4/`
+(report.md, function_stats.csv, event_aligned.csv, placebo_jumps.csv,
+sentence_labels.parquet, labels_low.jsonl; figure `figures/c5_corrected/
+coarse4_functions.png`, dated 2026-08-14/15) with pilot gold iterations in
+`outputs/conjectures/c5_sentence_functions/coarse4_pilot/`. Its report self-describes as
+"script 18", but no such script exists in `scripts/` (root numbering ends at 17) and no
+copy was found in session scratchpads — the generating code is lost; the artifacts and
+gold files are the record. Summary: same-model annotator (mlx gpt-oss-20b, greedy,
+effort low), 141,377 sentences / 1,004 analysed decisions (annotation checkpointed over
+1,007 usable steps); coarse-4 merge of the script-17 taxonomy after the 8-way scheme
+failed its kappa gate (0.504 < 0.60). Gold-152 blind precision: A 0.91 / S 0.78 /
+W 0.73 / M 0.32 (M exploratory only). Head→tail shares: world-reading 0.683→0.291,
+solving 0.249→0.450, meta-checking 0.057→0.139, concluding/answering 0.011→0.120.
+Jump at T_stab vs shuffled-stabilization placebo: W −0.172 vs [−0.135,−0.088] p=0.01;
+S +0.117 vs [+0.048,+0.097] p=0.01; M +0.032 p≈0.05; A +0.022 vs [+0.012,+0.025]
+p=0.20 (end-anchored, not stabilization-linked).
+
+**Workshop paper edit** (`_IAB_Workshop_2026__Belief_action_gap/workshop_main.tex`):
+- New §4.2 paragraph "What the tail contains": annotator + gold-152 precisions disclosed
+  in-text, M flagged exploratory; W-collapse/S-rise at the decision (placebo-tested);
+  concluding/answering end-anchoring dissociation; one sentence of validated regex
+  corroboration (grid nouns 0.37×, coordinates 1.41×, checking 3.73×, answer words
+  29 vs 1,751). Verification claims rest on the regex checking class, not on M.
+- New full-width Figure (`coarse4_functions.png` copied into workshop figures/;
+  label fig:sentence-functions; became Fig. 6, dynamics figure renumbered to 7).
+- §4.4 cluster-shift paragraph now cross-references the figure, plus a \td asking the
+  collaborators to state whether their "world-reading/solving/answering" semantic
+  categories and this coarse-4 annotator are independent instruments that agree, or to
+  unify them.
+- `ref.bib`: added `bogdan2025thought` (Thought Anchors, arXiv:2506.19143) for the
+  taxonomy source.
+- Compile clean: 0 undefined refs/citations; only the pre-existing `dblblindworkshop`
+  style-option error remains.
+
+## 2026-08-30 — Workshop paper: entropy commitment added to the §4.2 commitment paragraph
+
+Per the framing in the early behavioral report (`SPAR Belief Action Gap.docx` §4.1 /
+Fig. 8), the "Commitment to the eventual action" paragraph now introduces BOTH measures:
+commitment to the eventual action pi(a_t) and entropy commitment 1 − H(pi)/log 4 (tied
+to the manifold's radial coordinate), with the point that the whole distribution
+sharpens, not merely q(final). Also added the prompt-prior/reasoning-gain decomposition
+and per-action prior asymmetry. All numbers re-based on faithful labels (the docx's own
+values are from the old 10-trajectory stored-label subset and were NOT used).
+
+Verified directly from `outputs/prefix_commitment_metrics_extracted.parquet`
+(interp/.venv/bin/python; first/last prefix per step, 1,276 steps) since these exact
+values are in no existing report: empty-prefix means commitment 0.3375 / entropy_comm
+0.2973 / margin 0.3758; final-prefix means 1.0000 for all three; mean final-minus-prompt
+commitment gain 0.6625; empty-prefix per-action commitment DOWN 0.144 / LEFT 0.369 /
+RIGHT 0.665 / UP 0.144 (confirms D0's surviving ordering). Progress-bin endpoints from
+`outputs/behavior_manifold_extracted_report.md`: entropy commitment 0.3423 → 0.9075
+(all prefixes), 0.3263 → 0.8863 (pre-verbal). Compile clean, 0 undefined refs.
+
+## 2026-08-30 — Script 19: commitment-measures paper figure (workshop §4.2)
+
+New script `scripts/19_plot_commitment_measures_figure.py` (numbered 19 because the lost
+coarse-4 run already claims "18"). Command:
+`interp/.venv/bin/python scripts/19_plot_commitment_measures_figure.py`
+(defaults; seed 42, 12 progress bins, 1000-rep trajectory-clustered bootstrap over
+source_file). Input: `outputs/prefix_commitment_metrics_extracted.parquet` (faithful
+labels only).
+
+Two-panel figure `figures/behavior_extracted/commitment_measures_panel.png`:
+- Left: mean commitment_to_final and entropy_commitment vs progress, all prefixes
+  (solid) + strict pre-verbal subset (dashed), 95% cluster-bootstrap bands, empty-prefix
+  (prompt-only) baselines marked at progress 0 (0.3375 / 0.2973), uniform-prior line
+  0.25. Bin endpoints: commitment 0.348 → 0.974, entropy 0.333 → 0.966; pre-verbal
+  0.345 → 1.000 / 0.320 → 1.000.
+- Right: per-eventual-action commitment vs progress with empty-prefix baselines
+  (UP 0.144 / DOWN 0.144 nudged apart visually, LEFT 0.369, RIGHT 0.665).
+Values table written to `outputs/commitment_measures_figure_report.md`.
+
+Workshop paper: figure copied into `_IAB_Workshop_2026__Belief_action_gap/figures/`,
+added as fig:commitment-measures (became Fig. 6; coarse-4 → 7, clocks/hazard → 8) with
+two in-text refs from the "Commitment to the eventual action" paragraph. Compile clean,
+0 undefined refs. ruff clean (E402 noqa'd per repo convention).
+
+## 2026-08-30 — Script 20: commitment-gated counter-evidence injection (causal, text-level)
+
+Command: `interp/.venv/bin/python scripts/20_commitment_gated_injection.py --resume`
+(seed 42; 240 cuts = 40 per commitment_to_final bin [0-0.3, 0.3-0.5, 0.5-0.7, 0.7-0.85,
+0.85-0.95, 0.95-1], ≤3 cuts/decision; 217 decisions, 82 trajectories; 720 forced-answer
+evaluations = {counter: runner-up action, neutral: same-shape no-action, support: top
+action} × cut; every evaluation a full independent forward pass, NO KV-cache reuse;
+~25 min on local MLX gpt-oss-20b; per-10-eval checkpointing + --resume).
+
+**Headline: a single injected counter-evidence sentence overrides the accumulated chain
+almost everywhere; commitment protects only near ceiling.** On strictly counterfactual
+targets (injected ≠ eventually-taken action, n=201 — at low commitment ~50% of runner-ups
+coincide with the eventual action and are excluded): flip-to-injected 1.000/1.000/1.000
+(bins <0.7, n=81) → 0.925 (0.7-0.85) → 0.900 (0.85-0.95) → 0.625 (≥0.95); Spearman
+(commitment, flipped) = −0.421, p=5.0e−10. All-rows version: 0.875/1.0/1.0/0.925/0.900/
+0.625, rho=−0.269 p=2.4e−5. Neutral control: any-top-change 9.6% overall (drift to the
+specific runner-up peaks at 37.5% in the unstable 0.3-0.5 bin — natural lability, matches
+the switch hazard). Support: mean q(top) 0.757 → 0.989. Counter Δq(target) 0.61-0.81 per
+bin. Pre-registered decline direction CONFIRMED but the magnitude story is textual
+dominance with weak, late commitment gating — consistent with D4 (belief tracks CoT) and
+with readable-not-writable (the text channel, not the window representation, is causally
+load-bearing).
+
+Artifacts: `outputs/followups/commitment_gated_injection.parquet` (720 rows),
+`outputs/followups/commitment_gated_injection_report.md` (incl. strictly-counterfactual
+robustness split), `figures/counterfactual/commitment_gated_injection.png`,
+log `outputs/followups/cgi_run.log`. New script: `scripts/20_commitment_gated_injection.py`
+(ruff-clean).
+
+**Workshop paper §5 "Causal Tests" written** (was a bullet skeleton): §5.1 targets (clocks
++ anchors + readable window), §5.2 whole-chain patching (D4 numbers + fig) and the new
+injection experiment (+fig), §5.3 activation patching (four families at best settings +
+read/write asymmetry fig, caveats, \td for collaborators' pre-reasoning patching), §5.4
+four conclusions (movable-through-text-not-representation; weak late commitment gating;
+text/activation position dissociation; availability vs commitment vs causal-use
+bookkeeping). Figures copied: mismatched_prompt_cot_tracking.png,
+readwrite_asymmetry.png (= synthesis_read_write_asymmetry.png), commitment_gated_injection.png.
+ref.bib += mcgrath2023hydra, wang2023interpretability. Compile clean.
+
+## 2026-08-30 — §5.4 Causal Results: four conclusions written and verified by 7-reviewer panels
+
+Per user directive, each of the four §5.4 conclusions in the workshop paper was
+evaluated by 7 independent reviewer agents (fresh context, file access, mandatory
+verify-numbers-against-artifacts protocol, APPROVE/REJECT verdicts). Total 35 reviews
+across 5 panels.
+
+Verdicts:
+- P1 (does changing the belief before commitment change the action): 7/7 APPROVE.
+- P3 (do text and activation interventions identify the same positions): 7/7 APPROVE.
+- P4 (availability vs commitment-timing vs causal-use bookkeeping): 7/7 APPROVE.
+- P2 (do interventions lose force after commitment): round 1 = 7/7 REJECT, all on ONE
+  identical factual error the panel caught — the draft said "8.9% of prefixes above
+  0.95" where 0.0895 is the future-switch rate of the pd.cut TOP DECILE (>0.9; the
+  0.95 in commitment_boundary_phenomenology.md is a bin midpoint; true >0.95 rate is
+  0.0664, n=39,611). Fixed to "top commitment decile, >0.9"; round 2 with 7 fresh
+  reviewers = 7/7 APPROVE.
+
+Multiple reviewers independently recomputed the injection statistics from the raw
+parquet (all reproduce exactly), one ran a trajectory-cluster bootstrap of the headline
+correlation (rho 95% CI [-0.510, -0.316] — robust to clustering), and several noted the
+reported partial rho (-0.175, script 20's rank-residual estimator) is CONSERVATIVE
+relative to the textbook partial Spearman (-0.245, p=4.5e-04) — recorded here as a
+deliberate choice, reproducible from the released script.
+
+Non-blocking reviewer suggestions applied to §5.3 (outside the four judged paragraphs):
+"every number the readout sees" corrected to "the full 12x2880 window state at a layer"
+(the readout pools 24 layers; the patch hits one — the phrase the 2026-07-25 audit had
+flagged), and the swept layer sets are now named (steering 10/15/18; transplant ladder
+3/10/15/18). Suggestions noted for camera-ready but NOT applied (would alter approved
+text): "decisions"→"cuts/injection points" in the 90.0%/62.5% clause; footnote the
+partial-rho estimator; report activation-side n's and Wilson intervals in §5.3.
+
+Final §5 state: 5.1 targets, 5.2 whole-chain patching + commitment-gated injection
+(figs), 5.3 activation patching + read/write asymmetry (fig), 5.4 four approved
+conclusions. Compile clean, 0 undefined references.
+
+## 2026-08-30 — Workshop paper: latexmk build unblocked (two stacked blockers)
+
+User's latexmk workflow failed while my manual pdflatex+bibtex loop had pushed through.
+Root causes, both fixed:
+1. `\usepackage[dblblindworkshop]{neurips_2026}` — the option is from the generic
+   NeurIPS 2026 template, but the BUNDLED neurips_2026.sty is another workshop's copy
+   (its \@workshoptitle defaults to "Privacy in the Era of Large Opaque Models
+   (PriLOM)"; declared options only final/preprint/nonatbib/main/position/eandd/
+   creativeai/education/workshop; no \workshoptitle setter). The unknown option made
+   pdflatex exit nonzero → latexmk stopped after pass 1, before bibtex. Since the
+   option had always been ignored, loading the package OPTIONLESS reproduces the
+   exact double-blind submission rendering; a preamble comment documents the sty
+   mismatch and the pre-submission options (swap in the IAB workshop's official sty,
+   or [workshop] + \makeatletter\renewcommand{\@workshoptitle}{...}).
+2. ref.bib duplicate entries (`ziebart2008maximum`, `gurnee2024language`) made bibtex
+   exit with error status → latexmk aborted before the final reruns. Second copies
+   deleted (bibtex was skipping them anyway; rendered bibliography unchanged).
+
+Verified with the user's exact invocation from a clean state (`latexmk -C` then
+`latexmk -pdf -synctex=1 -interaction=nonstopmode -file-line-error -recorder`):
+exit 0, all targets up to date, 0 undefined references/citations. Remaining bibtex
+warning (volume+number in ng2000algorithms) is non-blocking and left for the
+collaborators.
+
+## 2026-08-31 — Causal-tests documentation
+
+Wrote `causal_tests_report_2026-08-31.md` (repo root): a self-contained account of the
+§5 work — evidence inventory (D4, activation battery, observational context), the
+script-20 injection experiment (design, exact numbers, robustness, position
+attribution), what went into the paper, the 35-review verification process incl. the
+caught top-decile error, limitations, and a file map.
+
+## 2026-09-03 — Behavioural-manifold figure removed from the workshop paper (reviewer remark); script 21
+
+Reviewer remark on Fig. 5 (CLR-PCA "belief manifold"): (1) a 4-action distribution has
+3 DoF, why a 2-d projection; (2) what does it establish beyond argmax + max prob +
+entropy? Tested with `scripts/21_action_competition_structure.py` on
+`outputs/behavior_manifold_extracted.parquet` (5-fold CV grouped by trajectory):
+- Redundancy: held-out R^2 of PC1/PC2 from (argmax one-hot, max prob, normalised
+  entropy) = 0.929 / 0.945 — the map is ~93-95% a re-rendering of the scalars, and its
+  star shape is CLR-on-simplex geometry (3-d version = tetrahedron vertex directions),
+  consistent with the 2026-07-25 finding that CLR(q) is the centred-logit geometry.
+- What remains: runner-up identity. Held-out accuracy 0.448 (majority per argmax),
+  0.505 (scalars), 0.791 (argmax + PC1/PC2), 0.937 (all).
+- Competition structure P(runner-up | top), top_prob < 0.6 (n=18,890): RIGHT is the
+  runner-up to every other action 51-61% (UP 0.514 / DOWN 0.582 / LEFT 0.609); UP<->DOWN
+  almost never compete (0.046 / 0.062); LEFT/RIGHT compete with everything.
+  Report: `outputs/action_competition_structure_report.md`; CSVs in
+  `outputs/action_competition_structure/`.
+
+Paper: user chose "cut from main text". Removed the manifold paragraph + Fig. 5 (star +
+trajectories; PNGs removed from the workshop figures/ dir, originals remain in
+figures/behavior_extracted/), fixed the entropy-commitment definition that referenced the
+figure's radial coordinate, and added a "Which actions compete" paragraph + Table
+(tab:competition) with the low-confidence competition matrix, tying the runner-up to the
+§5 injection target. Build: a corrupted workshop_main.bbl (two \end{thebibliography},
+likely an editor auto-build racing the scripted build) aborted one latexmk run; removing
+build artifacts and rebuilding from scratch gives latexmk exit 0, 0 undefined refs.
+
+## 2026-09-04 — Overleaf version synced: §4 reviewer TODOs resolved in place (workshop_main.tex)
+
+The user replaced the local workshop draft with the newest Overleaf version (2,034 lines;
+MG rewrote the commitment paragraph in new notation $\pi_{t,k}$, $c_{t,k}$; the manifold
+paragraph/figure is commented out; new appendices; collaborator \td notes on my §4.2
+paragraphs). Per the user, TODOs are handled one at a time and each resolved note is
+left in place as `\td{DONE (WW 2026-09-04): ...}` so collaborators can clear it.
+
+Resolved today (all in workshop_main.tex):
+- Token count: "2,370,850 reasoning tokens" defined as the summed lengths m_t of the
+  reasoning traces R_t (§2.1), gpt-oss-20b tokens excl. final action; verified exactly
+  from prefix_commitment_metrics_extracted.parquet (median 1,479.5/decision, IQR
+  642-2,605, range 75-9,733).
+- Sentence segmentation: stale TODO removed (procedure was already present); three
+  redundant restatements collapsed; footnote discloses that the coarse-4 sentence-
+  function analysis uses script 16's simpler splitter (punctuation+whitespace or line
+  breaks; <8-char spans dropped) -> 141,377 units / 1,004 decisions vs the corpus
+  chunker's 153,622 / 1,276.
+- MG paragraph TODOs: uniform baselines folded in; LEFT prior 0.37 added (empty-prefix
+  mean c_{t,0} by emitted action); "first action word" defined (generation-time
+  `action` token tag consumed by stage 02; no negation/context handling => the
+  pre-verbal restriction is conservative).
+- "Three clocks" -> "Timing of commitment", rewritten in MG's notation with k_t^com
+  defined in one clause; duplicated textual-commitment sentences (753/59.0%/99.87%/
+  523/823) removed from my paragraph (they now live in MG's text; provenance check
+  travels with them). "Half the chain" -> "Half the trace follows the decision";
+  cite boundary2026 -> scalena2026beyond (the real entry for arXiv 2606.13603).
+- "What the tail contains" -> "What follows the decision": meta-checking defined,
+  placebo sentence rewritten plainly, keyword classes explained (fixed word lists,
+  author-labelled precision 1.00/class).
+- "Stabilisation is gradual": "imperfectly absorbing"/"input-prior asymmetry" removed;
+  terminology fixed — "commitment" = commitment prefix k_t^com only; the continuous
+  quantity is c_{t,k} ("confidence"); explains why later switches can follow high
+  c_{t,k} (k_t^com is retrospective). Dynamics-figure caption aligned.
+- Cluster paragraph deleted (forward reference; duplicate of §4.4's own numbers).
+- Answer-forcing appendix corrected: it described a JSON-instruction readout that was
+  NOT used for the 98,310-prefix analysis; now states the 12-token Harmony suffix
+  (<|end|><|start|>assistant<|channel|>final<|message|>{ "action": "), single-token
+  candidates, independent forward passes; \td asks collaborators to document the
+  matched-cohort readout if it differs.
+- Figure: `scripts/22_redraw_coarse4_figure.py` redraws the coarse-4 figure from the
+  saved CSVs (function_stats/event_aligned/placebo_jumps; the original script is lost)
+  -> `figures/c5_corrected/coarse4_functions_v2.png` (paired before/after bars with
+  diff CI; event-aligned panels with explicit x-axis in 400-char bins and placebo in
+  titles); copied to the workshop figures/; tex switched to _v2.
+- ref.bib: deduplicated (dropped repeated ziebart2008maximum, gurnee2024language,
+  turpin2023language) and re-added bogdan2025thought, mcgrath2023hydra,
+  wang2023interpretability (lost in the Overleaf sync).
+
+Verification: scratch build with the two collaborator-side blockers stubbed (the
+undeclared `dblblindworkshop` sty option; missing figures/commitment_timing_matched46.png)
+-> latexmk exit 0, 0 undefined refs/cites, 0 bibtex errors. Those two blockers remain
+in the real files for the collaborators. Remaining open §4 TODOs are theirs: §4.1 scope
+(report-based beliefs exist only for the 46-decision matched cohort, not 98k prefixes),
+attention paragraph, K=12 selection, tests vs matched control, representative cluster
+sentences, duplicate tab:reasoning-events (appendix copy exists).
+
+## 2026-09-05 — Pre-verbal control and first-mention clock redone with a context-aware action-mention classifier (script 23)
+
+Reviewer TODO: the "first action word" used the generation-time bare direction-word tag
+(any token spelling UP/DOWN/LEFT/RIGHT, no context), so idioms ("pick up the key"),
+descriptive uses ("to the left of the door") and negated mentions ("cannot go up") all
+counted. New `scripts/23_action_mention_context.py`: per-token char offsets from the
+stored token ids (per-token decode reproduces analysis_text exactly), regex over the
+trace for every direction word, fixed context rules in precedence order
+idiom -> negated -> answer -> movement -> uppercase -> descriptive -> bare; decisional =
+answer|movement|uppercase|bare. Rules were tuned over three audit rounds on random
+per-rule examples (initial versions mis-hit "4 left moves", "then right?", "go down to
+6,7", "Up from (6,5)", "it's RIGHT", "Option left" — all decisional in this corpus).
+Final counts over 72,561 occurrences: bare 45,135; movement 13,270; uppercase 4,674;
+answer 2,207 (decisional 90.0%); descriptive 4,203; negated 2,383; idiom 689 (the
+latter almost all "pick up").
+
+Results (faithful labels, 1,276 decisions):
+- Pre-verbal subset (prefixes before the first decisional mention of ANY action):
+  35,379 prefixes (36.0%; was 31,723 / 32.3%); commitment first-tenth -> final-quarter
+  0.351 -> 0.926 (was 0.349 -> 0.924); inverse entropy 0.334 -> 0.887 (was 0.326 ->
+  0.885); top==final 0.554 (was 0.549). Eventual-action-only variant: 38,272 prefixes,
+  0.349 -> 0.893, 0.336 -> 0.872. Sensitivity (negated mentions counted as decisional):
+  35,333 prefixes, identical rises. Conclusion unchanged.
+- Timing: median first decisional mention 0.299 (was 0.253); 37.0% of decisions commit
+  before it (was 35.6%). Three-clocks CDF redrawn:
+  `figures/commitment_boundary/three_clocks_cdf_v2.png`.
+- Script 19 gained `--preverbal_mask/--preverbal_column`; regenerated with the mask ->
+  `figures/behavior_extracted/commitment_measures_panel_v2.png`
+  (pre-verbal dashed curves 0.347 -> 1.000 / 0.327 -> 1.000 across 12 bins).
+Artifacts: `outputs/action_mentions_context.parquet` (per occurrence, with rule and
+snippet), `outputs/action_mentions_context_steps.parquet`,
+`outputs/preverbal_decisional_mask.parquet`, `outputs/action_mention_context_report.md`
+(class/rule counts, random examples per rule, old-vs-new tables),
+`outputs/commitment_measures_figure_v2_report.md`.
+
+Workshop paper (workshop_main.tex): MG's pre-verbal sentence and the timing paragraph
+updated to the decisional definition and new numbers (DONE markers dated 2026-09-05);
+figures switched to commitment_measures_panel_v2.png and clocks_v2.png (copied into the
+workshop figures/); new appendix subsection "Action-Mention Classification"
+(app:action-mentions) with the rules, class shares and old-vs-new comparison.
+
+## 2026-09-05 — §4.2 remaining TODOs resolved; textual-commitment provenance check
+
+- "Explain how textual commitment is identified": the definition now states that the
+  sentence-function label is the four-class same-model annotation of §4.2 (class
+  concluding/answering, blind-gold precision 0.91) and that the mention / no-later-
+  contradiction criteria are deterministic; DONE marker asks the collaborators to confirm.
+- "Why do we care about optimality": purpose sentence added (intermediate optimality
+  localises where decision quality changes; §4.3-4.4 relate those points to belief reports
+  and hidden states); DONE marker.
+- Provenance of 753 / 59.0% / 99.87% / 523 / 823 (textual commitment vs prefix
+  stabilisation): reproduced from outputs/conjectures/c5_sentence_functions_coarse4/
+  sentence_labels.parquet (label A = concluding/answering), outputs/action_mentions_
+  context.parquet (direction-word positions) and the faithful-label stabilization_token in
+  outputs/commitment_boundary_steps.parquet. With "mentions the eventual action" = any
+  direction-word occurrence and "no later sentence mentioning a different action": 889 of
+  the 1,007 labelled decisions (69.7% of 1,276) have a textual commitment; prefix
+  stabilisation precedes it in 99.89% (paper 99.87%), median lead 534 (523), mean 845
+  (823) tokens. Numbers are consistent with the re-extracted labels; the 753 count implies
+  a stricter mention rule on the collaborators' side — DONE marker placed on the sentence
+  asking for it. Scratch build (blockers stubbed): clean.
+
+## 2026-09-05 — §4.1 "Belief Trajectories" scope corrected (collaborators' TODO, partial)
+
+The draft claimed report-based beliefs (wall/key/door) are queried "at each prefix". No
+such data exists in this repo (the prefix pipeline only elicits the forced action), and
+the collaborators' own §4.3 states the reports cover a 46-decision matched cohort
+(7,084 sentence prefixes, 42,504 reports). Rewrote §4.1 to state that scope and point
+to §4.3's tables; left a PARTLY DONE marker: the requested accuracy/entropy-vs-progress
+curves must come from the owners of the report pipeline.
+
+## 2026-09-05 — §5 hand-off note resolved: no pre-reasoning patching results exist to merge
+
+The abstract, Discussion and Conclusion assert "altering pre-reasoning state
+representations alone does not reliably change behaviour", but no p=0 activation
+intervention is reported anywhere in workshop_main.tex or short.tex; the only
+representation-level interventions are the reasoning-window battery of §5.3. §5.3 now
+states this explicitly (DONE marker), and the three dependent sentences carry a \td with
+the wording the reported experiments support ("altering the hidden representation from
+which the action is read out does not reliably change behaviour"), to be kept as is only
+if the collaborators add p=0 results to §5.
+
+## 2026-09-05 — Section-5 follow-up program ("run all"): scripts 24–28 written, smoke-tested, launched
+
+Follows the §5 review of 2026-09-04. Five new self-contained scripts (checkpointed, `--resume`, cache-free
+independent forward passes, `interp/.venv/bin/python`), all reusing the 240 script-20 cuts or the 396 script-10 pairs:
+
+- `scripts/25_belief_level_injection.py` — belief-level (state-fact) vs conclusion-level injections + template robustness on the
+  240 cuts: `belief_block_top` ("the cell immediately <dir of top> the agent at (r,c) is a wall (#)", false at ~94% of cuts, truth recorded),
+  `belief_open_runnerup`, `belief_true_top` (true fact control), `counter_alt1`, `counter_alt2`. 1,200 evals →
+  `outputs/followups/belief_level_injection.{parquet,_report.md}`.
+- `scripts/24_whole_chain_patching_v2.py` — pre-verbal foreign chains (B cut before its first *decisional* mention, script-23
+  classifier; also half-length) with paired own-chain controls (A cut before its own first decisional mention; A cut at the same
+  relative position as the stored D4 cut). ~1,450 evals → `outputs/followups/whole_chain_patching_v2.{parquet,_report.md}`.
+- `scripts/28_activation_sentence_transplant.py` — bandwidth-matched sentence-activation transplant: donor = prefix + counter sentence
+  (21 tokens), recipient = prefix + 21-token neutral sentence (" Wait, I should double-check this. Looking at the grid again carefully
+  before settling on a move here."); donor residual states at the sentence span written into the recipient at {all layers × full/last
+  12/6/1 tokens; layer thirds; layers 10/15/18} → forced answer. `all_layers_full` is the built-in positive control (must equal the
+  donor text answer). 12 passes per cut → `outputs/followups/activation_sentence_transplant.{parquet,_report.md}`.
+- `scripts/26_injection_with_continuation.py` — 120 cuts (20/bin) × {counter, belief_block_top}: greedy continuation (≤256 tokens,
+  stop at <|end|>) after the injection, then forced answer; immediate vs post-continuation flips, reversions, rejection cues →
+  `outputs/followups/injection_with_continuation.{parquet,_report.md}`.
+- `scripts/27_free_running_validation.py` — 60 cuts (10/bin) × 4 sampled continuations (temp 0.7, ≤700 tokens): eventual action
+  after the model's own <|end|> vs forced belief at the cut (calibration, agreement by bin) →
+  `outputs/followups/free_running_validation.{parquet,_report.md}`.
+
+Smoke test (`outputs/followups/logs/smoke_2026-09-05.{sh,log}`, outputs under `outputs/followups/smoke/`): all five ran end-to-end.
+Script 28 positive control held on 6/6 cuts (all-layer full-span transplant reproduces the counter-text answer exactly, mean Δq(top)
+−0.754 vs −0.756 for the text); already on 6 cuts a *single-layer* (10 or 15) transplant of the 21 sentence-token states flipped 5/6 —
+much stronger than the earlier forced-window transplants (§5.3), to be confirmed on the full 240.
+Full sequential run launched 2026-09-05 10:03 CEST: `outputs/followups/logs/run_all_2026-09-05.sh` (order 25 → 24 → 28 → 26 → 27;
+per-stage logs `outputs/followups/logs/s2?.log`). Results and paper edits to be appended below when complete.
+
+## 2026-09-05 — Results: scripts 25, 24, 28 (stages 1–3 of the follow-up program); paper §5 revised
+
+**Script 25 — belief-level vs conclusion-level injections** (`outputs/followups/belief_level_injection_report.md`, 1,200 evals, 240 cuts).
+Top action changed / flip to runner-up / mean Δq(top): `belief_block_top` (false at 226/240) 25.0% [Wilson 19.9–30.8] / 21.7% / −0.179;
+`belief_open_runnerup` (true at 196/240) 32.5% [26.9–38.7] / 32.5% / −0.166; `belief_true_top` control 4.6% [2.6–8.0] / 4.6% / **+0.074**;
+`counter_alt1` 76.7% [70.9–81.6] / 76.2% / −0.507; `counter_alt2` 70.0% [63.9–75.4] / 70.0% / −0.467; reference script-20 counter 88.8% / −0.641,
+neutral 9.6% / −0.032. Commitment gating for all: Spearman(changed, commitment) −0.234 (block), −0.375 (open), −0.420 (alt1), −0.474 (alt2).
+Strictly counterfactual by bin — alt1: 1.0/0.95/0.975/0.85/0.625/0.35; alt2: 1.0/1.0/0.9/0.8/0.475/0.25; block_top: 0.286/0.4/0.3/0.175/0.125/0.0.
+Belief-level flips ⊂ conclusion-level flips: 58 of 60 block_top flips also flip under counter (2 exceptions). When the wall fact is TRUE (14 cuts): 50% change.
+
+**Script 24 — pre-verbal foreign chains + paired controls** (`outputs/followups/whole_chain_patching_v2_report.md`, 1,452 evals).
+`foreign_preverbal` (B cut before first decisional mention; median 384 tokens, IQR 254–538, min 66): π(a_B)=0.582, top=a_B 60.1% [55.2–64.8], π(a_A)=0.158
+(original D4 early cut: 0.598 / 61.4%). `foreign_preverbal_half`: 0.399 / 44.7%. Paired own-chain controls: `own_preverbal` π(a_A)=0.593 (top=a_A 61.4%),
+`own_preverbal_half` 0.502, `own_same_relative` 0.685 (72.7%). Mean π(a_B)−π(a_A) under foreign_preverbal 0.423, trajectory-cluster bootstrap 95% CI [0.382, 0.474].
+By pre-verbal length tercile (short/mid/long, medians 210/388/640 tokens): π(a_B) 0.719/0.578/0.442 (confounded with chain difficulty). By original bucket: early 0.589, mid 0.538, late 0.618.
+
+**Script 28 — sentence-activation transplant** (`outputs/followups/activation_sentence_transplant_report.md`, 240 aligned cuts, 0 unaligned; 21-token neutral
+" Wait, I should double-check this. Looking at the grid again carefully before settling on a move here."). Flip to runner-up (all cuts; Wilson CI):
+donor text 88.8%; **all_layers_full 88.8% (positive control: top identical 240/240, mean |Δq| 0.003, 99th pct 0.052)**; all_layers_last12 88.8%; last6 85.8%; last1 54.6% [48.3–60.8];
+early_0-7 88.8%; mid_8-15 77.1%; late_16-23 51.7% [45.4–57.9]; **layer_10 77.5% [71.8–82.3]** (all 186 flips ⊂ text flips); layer_15 68.8% [62.6–74.3]; layer_18 26.7% [21.5–32.6];
+recipient (neutral text) 10.0%. Note: a single-layer write at ℓ ≡ writing all layers ≥ ℓ (patched positions' later states are recomputed), so the sweep measures
+how much the suffix reads below ℓ: ≈11 points below layer 10, ≈9 in 10–15, ≈42 in 15–18, ≈27 in 18–23.
+Strictly counterfactual by bin — layer_10: 1.0/1.0/0.975/0.875/0.65/0.35; layer_15: 0.952/1.0/0.975/0.775/0.5/0.125; text: 1.0/1.0/1.0/0.925/0.9/0.625.
+Interpretation: the earlier "readable but not writable" reading (§5.3) held only for low-dimensional edits and foreign-context window states at the readout site;
+the full in-context state of a sentence, written at its own positions at one mid layer, redirects the decision at bandwidth matched to a text injection.
+
+**Figure**: `scripts/29_plot_intervention_levels.py` → `figures/followups/intervention_levels.png` (copied to the paper's `figures/`): left = injection flip rates by
+bin for 3 conclusion wordings, 3 state facts, neutral; right = transplant flip rate by layers/positions.
+
+**Paper (`workshop_main.tex`)**: §5.2 new paragraphs "Pre-verbal foreign chains" and "Belief-level versus conclusion-level injections"; §5.3 new paragraph
+"Sentence-activation transplant", the read/write statement restricted to low-dimensional / foreign-context edits at the readout site, caveats updated, new
+`fig:levels`; §5.4 P1–P4 revised accordingly (P3 "No — they dissociate" → "Partly": text and activation agree on the sentence positions, dissociate at the readout
+window; P4 "readable but not writable" → "readable at the window, writable upstream at the text positions"); the supported-wording notes on the abstract /
+Discussion / Conclusion updated. Scratch build (dblblindworkshop option stubbed, missing collaborator figure stubbed): latexmk exit 0, 0 undefined refs, 40 pages.
+The four §5.4 conclusions changed materially → the 7-agent reviewer gate must be re-run once scripts 26/27 are in.
+
+## 2026-09-05 — Results: script 26 (injection with continuation), stage 4 of 5
+
+`outputs/followups/injection_with_continuation_report.md`; 120 cuts (20/bin) × {counter, belief_block_top}; greedy continuation ≤256 tokens after the injection
+(stop at <|end|>), then forced answer. **counter**: flip to runner-up immediate 88.3% → after continuation 64.2% [Wilson 55.3–72.2]; 29 of 106 immediate flips
+revert, 0 new; mean π(top) 0.764 (before) → 0.123 (immediate) → 0.358 (after); π(runner) 0.872 → 0.603; ended naturally 52.5% (median 208 tokens), and among
+the 63 naturally-ended continuations the flip holds in 87.3% (reversions concentrate in unfinished continuations that re-parse the grid). After-flip by bin
+0.65/0.8/0.8/0.8/0.5/0.3 (strict: 0.714/0.833/0.8/0.8/0.5/0.3); Spearman(commitment, after-flip) −0.261 p=0.004. **belief_block_top**: immediate 17.5% → after 16.7%
+[11.1–24.3]; 15 of 21 immediate flips revert, 14 new; π(top) 0.764 → 0.593 → 0.719; ended naturally 15.8%; re-examination cue in first 200 chars 76.7%; rough
+regex on the first 300 chars: confirm-only 24, deny-only 32, both 28, neither 36 of 120 — the model re-checks the named cell and confirms the false wall
+about as often as it re-reads the cell as open (mixed; not reported as a number in the paper).
+Paper: §5.2 new paragraph "Persistence under continuation"; §5.4 P1 and P2 extended with the survival numbers.
+
+## 2026-09-05 — Results: script 27 (free-running validation), stage 5 of 5; program complete (RUN_ALL_DONE 12:55 CEST)
+
+`outputs/followups/free_running_validation_report.md`; 60 cuts (10/bin) × 4 sampled continuations (temp 0.7, ≤700 new tokens; seeds 42·1000+i); 33.8% end
+naturally (median tokens 700 = limit for the rest; unfinished samples forced at the limit). Overall P(eventual == forced top at cut) 0.758 vs mean q_cut(top) 0.761;
+mean log-lik of eventual under q_cut −0.737 (uniform −1.386); per-cut TV(empirical, q_cut) mean 0.273 / median 0.189 (vs uniform 0.662); per-cut Spearman(frac top, q_top)
+0.439 (p=4.5e−4), Pearson 0.403. Reliability by q_top bin: [0.4,0.6) 0.498→0.659; [0.6,0.8) 0.696→0.578; [0.8,0.9) 0.840→0.854; [0.9,0.95) 0.926→0.906; [0.95,1) 0.991→0.977.
+By commitment bin P(top): 0.275/0.60/0.85/0.875/0.95/1.0 (q_top 0.765/0.463/0.63/0.81/0.911/0.99). Where forced top ≠ agent's eventual action (14 cuts, 56 samples):
+P(eventual==top) 0.321, P(eventual==agent) 0.554, q_top 0.69, q_agent 0.163 → the forced readout overstates alternatives at low-commitment cuts. Naturally-ended
+samples: P(top) 0.877 (n=81) vs 0.698 for forced-at-limit (n=159). P(eventual == agent's actual action) overall 0.812.
+Paper: appendix "Answer Forcing" gains "Validation against free-running behaviour"; §5.1 gains a pointer sentence. Program summary: 5 scripts, ≈7,600 forward
+passes + 480 generations, 10:03–12:55 CEST; all outputs under `outputs/followups/`, logs under `outputs/followups/logs/`.
+
+## 2026-09-05 — Reviewer gate, round 1 on the revised §5.4 (7 agents per conclusion, verifying against files) → fixes
+
+Round 1 verdicts (old text): P1 6/7 approve (reject: "the text acts mainly through stated conclusions" over-generalises single-sentence
+evidence to whole chains, where 60.1% redirect with no move named); P2 3/7 approve (4 rejects, all on the clause "readout-window interventions
+were ineffective at every commitment level" — the steering/c6 battery was never commitment-stratified; steering prefixes span commitment 0.21–0.87);
+P3 1/6 approve (5 rejects: the positional dissociation is contradicted by script 28's all_layers_last12/6/1 = 88.8/85.8/54.6% — the last 12 sentence
+positions ARE the 12-token readout window; the dissociation is by written content, not position; "upstream" wrong); P4 pending (2 reviewers on old text).
+Every number in all three paragraphs reproduced exactly from the parquets. Side findings: §5.3 "moves decoded commitment by at most 0.006" was stale —
+`steering_summary_normscaled.csv` max |mean_d_commitment| = 0.0497 (layer 18, commitment, α=−1; random max 0.0354) → corrected to 0.050/0.035;
+§5.2 continuation ρ=−0.261 is the all-120-cut value (strict −0.386) → labelled; "8.9% top commitment decile" is an equal-width bin, reworded
+"commitment above 0.9"; "imperfectly absorbing" no longer used in §4 → reworded; "77.5% of decisions" → "cuts"; false-fact label qualified (226/240).
+Fixes applied to P1, P2, P3 (rewritten: "Yes, once what is written is held fixed … what dissociates is not position but content"), P4
+("readable at the window and writable at those same positions, but only at the full bandwidth of an in-context sentence state"), §5.3 (window
+identity made explicit). Round 2 launched with 7 fresh reviewers per conclusion.
+
+## 2026-09-05 — Reviewer gate, round 2 on the corrected §5.4: 28/28 APPROVE — goal achieved
+
+Seven fresh general-purpose reviewer agents per conclusion, each recomputing the paragraph's numbers from the parquets (`interp/.venv/bin/python`) and
+checking the logic (instructions: scratchpad `gate2/shared_instructions.md`). Verdicts: P1 "Does changing the belief before commitment change the eventual
+action?" 7/7; P2 "Do interventions lose force after commitment?" 7/7; P3 "Do text and activation interventions identify the same positions as causally
+important?" 7/7; P4 "Which conclusions concern availability, commitment, and causal use?" 7/7. Every quantitative claim reproduced within rounding in all 28
+reviews. Non-blocking notes applied afterwards (wording only, no numbers): "90.0% of decisions" → "cuts" (P2); "overwriting the entire readout window at a
+single layer" (P1). Notes left as-is (already stated in §5.3 or out of scope): the last-12 in-context write is all-layer while the 20.8% foreign overwrite was
+single-layer; the partial-ρ estimator of script 20 (rank-residual Spearman −0.175) is conservative vs the textbook partial Spearman (−0.245); §4 now calls
+c_{t,k} "confidence" in places while §5 says "commitment" (collaborator terminology; flag for the paper owners); the steering battery's commitment range
+0.21–0.87 is in commitment_to_final units (entropy commitment 0.07–0.64).
+
+## 2026-09-12 — Activation causality campaign initialized
+
+User authorized the cooperative four-agent plan: 72-hour local campaign, belief-to-action mechanism primary target, fresh confirmation decisions, and a separate proposed paper-section revision. Authoritative paper: `_IAB_Workshop_2026__Belief_action_gap-4.pdf`. Persistent research goal registered; campaign deadline 2026-09-15 08:24:34 UTC.
+
+Implemented initial registry/worker and assigned independent engine, environment, and review owners. Root-local package `src/activation_causality/`; entrypoint `scripts/30_activation_causality_campaign.py`; protocols `research/activation_causality/`; results `outputs/activation_causality/campaign_20260912/`. Existing paper/data/upstream remain untouched.
+
+Metal unavailable inside sandbox; authorized outside-sandbox preflight succeeds on Apple M4 Max, 48 GiB memory, MLX 0.31.2 / mlx-lm 0.31.3. Initial 32 CPU tests pass. First actual-model correctness gate caught a BF16 NumPy conversion error before any experimental row; fix and expanded long-context parity gate underway. No scientific result yet. Frozen initial workloads: 12 historical sentence cuts ×9 conditions (forced-only), and 24 new matched layouts ×8 conditions (forced-only). Fresh state cases are discovery, not confirmation.
+
+## 2026-09-12 — Corrected activation engine gate and sentence positive control
+
+The first attempted resume did not restore the full-head inference mode chosen by validation. The entire `sentence_reproduction_forced_v1` experiment is retired (20 raw rows preserved; not scientific evidence). Fixed the default across worker restarts and recorded execution fingerprint plus head mode per row. Expanded actual-model gate passes short/long (>128 token sliding window), all three hook sites, exact identity, and nonvacuous layer-10 three-token patched-cache checks. Native/manual same-shape logits match exactly; ordinary BF16 cached/full batching drift is measured and reported, not mislabeled exact equality.
+
+Clean `sentence_reproduction_forced_v2`: all108 jobs complete, 12 historical cuts ×9 conditions, one execution fingerprint, full-head throughout, no errors. Target forced-top counts: baseline0/12; layer10 10/12; layer15 10/12; all layers/full sentence11/12; all layers/last12 11/12; donor text11/12; reverse layer10 1/12. Identity baseline probabilities match exactly; full transplant and donor top match12/12, but probabilities are not exactly equal. Independently recomputed by reviewer. This is only a reproduction of sentence-state sufficiency under forced readout. Native-generation pilot now runs six cuts ×9 conditions, cap2048; no new semantic claim.
+
+
+### 2026-09-12 — Controlled activation discovery and native pilots
+
+Completed three registered forced-only discovery sweeps on 12 fresh controlled layouts (four wall, four key, four door): state_controls_forced_v1 (456 jobs), fact_sentence_forced_v1 (204), input_fact_forced_v1 (264). All scheduled jobs completed without technical errors; identities reproduce baseline distributions exactly. Last-header task-state patches and authored Boolean fact patches show little target-probability benefit. Early input-fact patches instead reconstruct the physical counterfactual distribution: mean total variation distance falls from 0.13608 (recipient versus counterfactual) to 0.02675 at layer 0 and 0.03254 at layer 3. This is a post-hoc forced-distribution routing diagnostic, not a native or semantic-mechanism claim. The independent reviewer recomputed counts, norms, ties, and provenance in research/activation_causality/REVIEW.md.
+
+The first historical native pilot completed all 54 jobs at a 2,048-token cap: 39 final actions and 15 truncations. Target success was 3/6 for layer-10/full sentence transfer versus 0/6 for neutral baseline, but completion-sensitive bounds include zero. A uniform 4,096-token repeat preserves every earlier result. Fresh native state-control and input-fact pilots are registered; one GPU worker runs the queue.
+
+Implemented exact generated-token reasoning windows, late authored-fact interventions, source-fact patches, immutable discovery-only subspace fitting and held-out subspace tests, and a validated scientific control-figure builder (script 31). Source/model/code fingerprints, alias-aware layout exclusion, multiple-comparison correction, native noncompletion handling, and immutable candidate review protect the future confirmation stage. No original manuscript was changed.
+
+
+### 2026-09-12 — Native sentence control and factual-report diagnostics
+
+The complete sentence_native_pilot_v2 cohort contains 54 executions at cap4,096: 51 parsed final actions and three truncations. All 54 input hashes and common generated-token prefixes exactly reproduce cap2,048; the 39 previously complete sequences remain identical, and 12 of15 truncated sequences now finish with non-target actions. Layer10/full/last12 transfer still yields target3/6 versus neutral0/6, with completion-sensitive point bounds +.333 to +.500. Small historical samples do not establish a population effect; the explicit action-bearing sentence is a positive control, not a task-belief mechanism. Independent audit in REVIEW.md; script31 regenerated PNG/PDF/counts and rendered PDF verified visually.
+
+Fresh native header controls completed84/84, with82 final actions and two truncations. Recipient and physical counterfactual are each simulator-optimal6/6 and switch on all six layouts, while each forward layer10 patch preserves the original action6/6 despite altered reasoning sequences.
+
+Added cloned-state Boolean factual-report diagnostic and a pure source-cohort adapter; registered input_fact_report_forced_v1 (60 jobs) before queries. It retains the entire physical input-fact cohort, exact token IDs/positions and immutable lineage, reports unchanged-fact controls and Boolean candidate mass, and makes no native-action or latent-belief claim. Optional runner integration precedes the next inference queue.
+
+### 2026-09-12 — Audited native input-fact effects and independent report branches
+
+Completed input_fact_native_pilot_v1:60/60 jobs on the same six discovery layouts as the header pilot, two per wall/key/door family. Layer0 and layer10 matched input-fact-span patches each produce the simulator's physical-counterfactual target action6/6, versus original baseline0/6. Direct physical counterfactual6/6; both physical text baselines optimal6/6 for their own states. Identity and last-header comparators remain0/6; random controls1/6 atL0 (plus one truncation) and0/6 atL10. Overall59 final actions and one random-control truncation. All12 identity conditions exactly reproduce recipient generated IDs and forced distributions. This is exploratory input-information routing evidence, not an abstract belief mechanism or held-out confirmation. Independent raw audit and script35 counts/PNG/PDF are complete and visually verified.
+
+Completed input_fact_report_forced_v1:60/60 registered derivative jobs,120/120 scored Boolean probes. The rerun reproduces all60 original source forced-action distributions and input hashes exactly, then probes independent clones of each rebuilt prefill, with original cache/logit/token/intervention fingerprints preserved. Intended target-report conditional-probability changes L0+.807394 andL10+.871158; unchanged-fact changes+.008763 and+.013885. Report full candidate mass: randomL0 conditional targetq=.596120 coexists with full-vocabulary target probability=.047721 and Boolean mass=.346197. PhysicalCF key cases give mean targetq=.622011; this two-case descriptive score is not a calibration study. Separate reports do not establish mediation.
+
+Reasoning-forced100, late-authored-fact-forced124 and contextual-input-forced264 also complete and independently audited. Late single-layer patches replace sentence-tail states after the Boolean token; only the full-span condition includes that token. First contextual audit had an incorrect random-control norm denominator and is explicitly superseded by auditv2; all raw results are unchanged. Registered native endpoint extensions100/124/132 now execute serially under one worker, regardless of forced-screen signs.
+
+Mixed-family input confirmation now enforces fixed wall/key/door quotas, source-result lineage, global layout aliases, within-family resampling and conservative constant-stratum guards. Full model identity now hashes all3 actual weight shards plus metadata (10files,459 indexed tensor names) before confirmation. New pure random-subspace helper matches tokenwise task-projected update norms and records float32 errors; compiler integration waits for the live inference queue to finish. All298 CPU campaign tests pass; Ruff passes. No confirmation selection is frozen. Updated separate interim causal-section proposal has independently verified numbers, links and source hashes; original PDF remains unchanged.
+
+### 2026-09-12 — Native reasoning-window extension and subspace provenance gates
+
+reasoning_windows_native_pilot_v1 completes100/100 technical executions,98 final actions and2 truncations (a door baseline and its exact identity atcut32). Every matched L10/L15/all-layer last12-window condition has target0/5 atcuts32/128; every natural-donor window condition has target0/6. Matched donor continuations reach target5/5 at32 and4/5 at128; natural donors differ from the recipient's counterfactual target6/6 atbothcuts. All100 forced distributions/input hashes exactly replay the forced cohort. All54 transfer continuations change generated tokens. Two natural-L15 key cases produce third actions, matching neither target nor actualdonor; therefore no target transfer does not mean no action influence. Reviewer audits and complete analysis are saved. These reuse the same discovery layouts and are not confirmation.
+
+New basis loader requires a materialized-engine proof bracketed by full weight hashes, representation-runtime compatibility, same-bytes artifact verification, connected fit audit plus original immutable request, valid source job IDs/definitions and nested layout aliases. Independent review caught and reproduced a missing request-payload link; fixed before any basis fit/query. Both intended and random subspace writes now have a prospectively registered1% numerical audit contract with exact recipient hashes, exactzero rules and preserved technical failures. Pure helpers and fit-side builder are complete; engine/runner integration waits for the active native queue. Latest full suite342 tests passes in9.205s; full Ruff passes. No basis fit, selection freeze or confirmation query has occurred.
+
+### 2026-09-12 — Runtime integration staged without changing active experiments
+
+Prepared isolated CPU staging at tmp/activation_runtime_stage_20260912. Five changed files integrate full loaded-model proofs, strict basis/source/request provenance, exact pre-write recipient hashes, and prospective intended/random applied-norm checks. Failed checks preserve compiled/actual diagnostics before action scoring; whole-cohort fingerprints stay stable across resumed workers. Independent review passes50 targeted tests with warnings-as-errors; staged full360 tests and Ruff pass. Original inference files and tests remain unchanged while session31376 executes the native queue. Promotion and real BF16 preflight are pending.
+
+Archived24 original package files at outputs/activation_causality/campaign_20260912/source_snapshots/20260912T110753Z. Reconstructed execution keys match input-native60, factual-report60, reasoning-native100 and the42 late-fact rows present at capture. Earlier different execution identities are not claimed covered.
+
+Prospectively registered subspace_complete_native_plan_v1.json before any fit/subspace query: all six L0 wall/key/door rank1/rank4 fits proceed to full native evaluation if technically valid, regardless of forced-action sign. Exact source/layout aliases, basis/experiment IDs,14conditions,doses.5/1,seed42,temp.7,cap4096 and failure gates are fixed.336forced plus336native trials reuse12evaluation layouts across ranks. This is descriptive discovery, not confirmation or a semantic/necessity claim. Six-hour reporting reserve remains required.
+
+
+### 2026-09-12 — Archived analyses independently replayed
+
+Added research/activation_causality/REPRODUCE.md, an exact local environment inventory and archived analysis drivers. The first isolation assertion caught an omitted src/__init__.py: from repository cwd, Python could select the live regular src package instead of the archive namespace. No analysis was accepted from that attempt. Immutable environment manifest_v2 adds the initializer and preserves v1; explicit module-origin checks now pass from repo cwd, and an absent broader src module cannot fall back to the live tree.
+
+Using the corrected archive, input-native60 and reasoning-native100 generic summaries, Markdown and PNGs reproduce byte-for-byte; their PDFs differ only in CreationDate. The engineer independently reran all four dedicated figure/report commands: every scientific value, count, raw-source/spec hash and all three PNGs match; factual JSON/Markdown match exactly. PDF text and rendered pages were verified. The reviewer independently checked isolation and artifact comparisons. Saved audits are archived_generic_reanalysis_audit_v1.json and archived_figure_report_reanalysis_audit_v1.json. Routing figure script32's earlier counts name a different script hash; the current archived script reproduces its values, without claiming the archive contains that earlier script version. This is saved-data reanalysis, not new model replication or a complete inference installation.
+
+Engineering audit of subspace_complete_native_plan_v1 verifies all24 source definitions, training/evaluation aliases and all six 14-condition inventories before any fit. Live inference and its source files remain unchanged; native late-fact/contextual queue continues. The staged runtime has not been promoted, and no candidate freeze or confirmation query exists.
+
+
+### 2026-09-12 — Late authored-fact native cohort completed and audited
+
+reasoned_fact_native_pilot_v1 completes124/124 technical executions,115 parsed actions and9 truncations on the same six discovery layouts. Correct-assertion baselines reach target0/6 atcuts32/128. Last12-tail L10/L15 transfers each reach0/6 atbothcuts, with2 truncations perlayer at32 andnone at128. The literal Boolean lies just outside those narrow windows. Contradictory authored-assertion text under the unchanged recipient observation reaches0/6 at32 and1/6 at128; all24-layer/full-suffix patches reach1/6 atbothcuts. These are sparse, mixed-direction discovery outcomes, not a general activation or belief null.
+
+All124 forced distributions and input hashes replay exactly;84 source fingerprints verify;24 identity conditions reproduce entire generated sequences and zero writes. All68 nonidentity patch continuations differ from their controls, including two nonspecific L15 third-action changes. Full-span patched and donor-text continuations need not match because residual writes leave different upstream KV caches. Independent audit reasoned_fact_native_independent_audit_v1.json and generic report are complete; original PDF remains unchanged.
+
+A proposed42-job full-suffix L10/cut32 follow-up was not registered or queried. Coordinator and reviewer prioritized already registered contextual-input and subspace work because the authored-text reference itself is weak; retain the layer/window limitation explicitly. Session31376 is now running contextual_input_native_pilot_v1 (132 planned jobs), and original inference files remain frozen until the entire queue ends.
+
+
+### 2026-09-12 — Complete-search inventory and audit-source archive
+
+Added standalone CPU script 36 and SEARCH_LEDGER_GUIDE.md. Immutable v1/v2 ledger snapshots enumerate every registered design, including the retired sentence run, source/preparation definitions, unexecuted initial design, exact result/spec/job identities, recorded layout overlap, attempts and operational preflight/gate history. Partial native outcomes remain withheld; no pooled target effect or global completion fraction is produced. V2's independent review verifies 2192 captured files, 2920 canonical job definitions and 2163 frozen result bindings, with exact Markdown regeneration and 11 targeted CPU checks. The v2 snapshot has contextual 87/132 rows and is explicitly distinct from later live progress. A snapshot-race label was fixed; v2 also recognizes basis_fit_failed operational events. V1 is retained. Exact writer bytes and manifests are archived, and the archived v2 command runs successfully.
+
+Contextual-input audit preparation verifies all 132 frozen jobs, 36 physical/token checks and the corrected random-control norm reference without reading partial native outcomes. Prepared contextual and late-fact audit scripts are archived with their prior preparation hashes. Model session 31376 remains live (contextual 103/132 at 12:09:40 UTC); original inference files are unchanged. Staged runtime promotion, six basis fits, registered subspace evaluations, frozen selection and fresh confirmation remain pending.
+
+
+### 2026-09-12 — Contextual native audit and prospective runtime promotion
+
+The complete contextual native cohort has 132 executions, 129 parsed actions and three truncations. Matched and natural-context input transfers each reach the recipient-relative counterfactual target on all six layouts at layers 0 and 10; same-fact and irrelevant controls reach none. Five observed natural-donor actions differ from that target; one unresolved donor remains in the denominator. All 24 identity/restoration token traces and 132 forced/input/patch-log replays match. Thirty-six executions exactly repeat earlier results on the same six layouts, so this is additional control evidence, not an independent replication. The independent audit and overlap supplement are saved; the paper proposal is updated separately and the PDF remains unchanged.
+
+Root verified queue session 31376 terminal with exit code 0. A discovered engine import-provenance gap was fixed and independently reviewed in the isolated stage before promotion: five unchanged dependency files now enter execution/gate, freeze/readiness and basis-representation identities. Under the repository worker lock, all 12 original/stage hash guards passed; original files were archived and the final files promoted. A prospective subspace implementation addendum preserves every prior scientific setting and ID. All 368 promoted-workspace CPU tests pass with warnings treated as errors; Ruff passes. An independent 29-file source archive and isolated fresh-import verification are complete.
+
+The first registered wall rank-1 basis fit succeeded with full source, model-snapshot and activation-representation gates. Its first held-out 14-condition forced block completed without technical errors; all four intended/matched-random actual BF16 writes pass the unchanged 1% norm and exact recipient-hash contract. NumPy emitted warnings in a Gram calculation despite returning finite near-unit values matching an independent scalar calculation; the engineer is auditing that discrepancy before continuation. This is technical preflight, not a completed 56-row cohort or native action evidence. No candidate selection, freeze or confirmation query exists.
+
+
+### 2026-09-12 — Six subspace fits and complete forced batteries audited
+
+All six prescribed wall/key/door layer-0 rank-1/rank-4 fits passed exact source, snapshot and representation gates. All twelve actual-basis evaluation specs were registered before any native query. The 336 forced jobs completed without technical errors; independent review verifies all six fit chains, exact 56-job cohorts, 96 guarded norm writes and 48 forced identity/restoration checks. Maximum relative applied-norm error is 0.0764% against the fixed 1% threshold. The finite NumPy Gram warnings are retained with independent scalar-Gram evidence; runtime/tolerance are unchanged. All six forced reports and the combined independent index are saved.
+
+Native queue session 59710 now executes all 336 prespecified native jobs, regardless of forced-readout sign. The same twelve evaluation layouts are reused across ranks and conditions. No candidate freeze or fresh confirmation query exists yet. The separate contextual figure and updated manuscript proposal preserve shared-layout/repeated-execution and norm-control limitations; final independent figure review is underway.
+
+
+### 2026-09-12 — Contextual norm limitation, archived replay and ledger v3
+
+The completed contextual write logs show natural/same-fact norms differ substantially (7.849–499.419× at layer 0; 1.659–30.540× at layer 10). The existing matched-counterfactual random control is only 76.183% of the natural norm on one layer-10 wall case. Independent review recommends one conditional additional natural-norm random condition if a contextual profile is selected, preserving the same direction/support/seed and all existing controls. Primary natural-versus-same-fact remains unequal in magnitude; any norm-specificity claim needs prospective inferential treatment. No candidate, layer or freeze is selected. The interim paper adds this caveat; prior draft, original PDF and figures are preserved.
+
+The exact archived contextual figure writer reproduces the PNG byte-for-byte and the PDF after only CreationDate normalization; scientific counts and source hashes match. The new reproduction addendum records the command. Ledger v3 now includes all 31 specs and retains a detected live-read race with partial native outcomes suppressed. Its 2598 captured hashes and exact Markdown were independently checked. Native queue 59710 remains active, with whole-cohort scientific summaries deferred until completion.
+
+### 2026-09-12 — First native subspace cohort and bounded audit automation
+
+The first wall rank-1 native cohort completes all 56 executions: 48 parsed actions and eight capped continuations on four later discovery layouts. Full-dose task-subspace transfer reaches the counterfactual action 4/4, baseline 0/4 and projected-norm-matched random 1/4. Independent replay, identity and norm checks pass; the interpretation preserves half-dose censoring, reverse/removal outcomes and the four-layout discovery limitation. No candidate is selected before the other five registered native cohorts finish.
+
+Standalone CPU script 38 passed 19 targeted tests and independent review. Root launched bounded watcher session 60607; it audits only exact complete cohorts into separate immutable automated-recomputation files. The first automated audit succeeded. Model queue 59710 remains the only model worker, with promoted inference sources unchanged. Conditional adapter and statistical-design preparation proceeds without confirmation queries or candidate selection.
+
+### 2026-09-12 — Three native subspace cohorts and prospective confirmation contracts
+
+Wall rank-4 and key rank-1 now join wall rank-1 as complete, independently audited 56-job native cohorts. Wall rank-4 full-dose transfer reaches 3/4 targets plus one cap, while its norm-matched random condition produces third actions on all four layouts. Key rank-1 full dose reaches 4/4 targets and norm-matched random preserves all four original actions; removal retains all four targets, so it supplies no necessity evidence. The three remaining native cohorts continue under the unchanged model queue; no partial outcomes or candidate selection are used. The generic key rank-1 report completed successfully.
+
+The reviewed v4 candidate-selection policy was prospectively adopted during discovery, before wall rank-4 outcomes were read by the coordinator. It fixes two co-primaries per selected question, a maximum four-contrast family, complete-control qualification and budget rules, a fixed descriptive lexical supplement, and the absolute six-hour reporting reserve. No candidate, freeze or fresh model query exists. Independently reviewed staged components include source-cohort completeness, the fixed reversible renderer, the canonical frozen subspace adapter and co-primary analysis with legacy byte parity. The contextual adapter, full-write norm instrumentation and integrated freeze/readiness/sampling/cutoff are being implemented in isolation. Script 39 is certified for complete-only final subspace synthesis; it has not read or plotted the unfinished search.
+
+### 2026-09-12 — Fourth native cohort and reviewed confirmation components
+
+The complete key rank-4 native cohort has 56 jobs, 49 parsed actions and seven caps. Half-dose transfer reaches 4/4 targets versus baseline and projected-norm random each 0/4 plus one cap; full dose reaches 3/4 plus one cap. Removal and half-dose reverse retain all four targets; full reverse restores all four original actions. There are no third actions. All eight whole-token identities, 56 forced/input replays and 16 required norm writes pass. Twenty reference executions exactly repeat key rank-1 on the same four layouts. The independent audit and generic report are complete. The two door cohorts continue under the unchanged sole model worker; candidate selection remains closed.
+
+Independent review now covers the complete-control co-primary contract, the same-bytes discovery source/authenticity gate, corrected fifteen-condition contextual adapter, full-write norm compiler/runner and CLI full-family analysis dispatch. Review found and corrected JSON-type equality gaps and source hash/parse races before promotion; original findings and regression tests are retained. Root separately reproduced the contextual adapter's existing mechanics with the actual local tokenizer on six discovery layouts: 168 repeated canonical job definitions match, with all fifteen conditions constructible in both fixed renderings. No new native outcome or BF16 result is implied. All 29 live promoted sources remain unchanged. The persisted sampler, cutoff supervisor and outer source/basis/freeze/readiness/lexical integration remain in progress; the persistent investigation goal remains active.
+
+## 2026-09-12 16:03 UTC — closed discovery and actual full-write preflight
+
+All six native subspace cohorts closed and passed independent audits (336 jobs, 305 parsed actions, 31 caps; 12 physical layouts shared across ranks). The complete six-panel figure and independently reviewed scientific selection record are saved in the campaign: contextual L10 and wall L0/rank1/dose1 proceed toward fresh confirmation. This selection follows a policy adopted during discovery, not before it.
+
+After the native queue ended, five reviewed modules were promoted under the worker lock and archived with the resulting 33-file runtime (`technical_preflight_promotion_20260912/manifest.json`, SHA256 6bbcd0b0c197eeae77d456ba433be912a1fcf63053ec2bf76c576d014fb287c1). Actual forced-only full-write preflight completed72/72, zero errors/native queries, 48 norm checks, 24 orientation records and12 exact-zero identities. Independent audit SHA256 e0c66d2b290921761b9f8afdbce9c52b5940bbff04df0bd7d25a509711986b68; maximum norm relative error0.000174472179. Model sessions59710/23672 and watcher60607 are terminal.
+
+Fresh-cohort planner/freezer/renderer/lease integration is staged and under final review. The corrected17 freeze +9 CLI tests pass. Historical preflight source inputs are being bound to their immutable archive across final promotion while current execution bytes must still match. No production sampler, freeze, registration or confirmation query has occurred. The goal remains active; main PDF unchanged. Current handoff: research/activation_causality/STATUS.md and CONFIRMATION_INTEGRATION.md.
+
+## 2026-09-12 16:40 UTC — frozen fresh confirmation launched
+
+The integrated implementation passed646 CPU tests and Ruff, then was promoted under the worker lock (44runtime files; initial promotioned8f3828…). Actual preparation completed128layouts per candidate in four attempt-zero batches with no rejected pairs, fixed seed20260912, globalm4, all15/14controls and32-layout optional rendering subsets (4,640jobs). All scientific fields and sampler state are immutable.
+
+A pre-query operational review found that resolving the Python symlink would launch base Python outside the venv. The supervisor-only correction preserves the venv invocation and binds binary/prefix/pyvenv.cfg identities;41 targeted tests and32 independent tests passed. The reviewed source-only promotion and constrained plan amendment retained every scientific artifact without resampling. Exact amended planSHAb4099de6…; final independent approval2d37032d…; current44-source promotion manifest05930b5c…. Original unapproved plan and all audit-harness failures remain archived.
+
+Freeze confirmation_20260912_v1 published16:33:28UTC (SHA898ea839…), registration copied all8spec/dataset files with exact hash parity. First single-cohort localMetal supervisor session62935 launched contextual_primary (1,920jobs), parent79885/child79914, lease9227a6ff00f04224b0ab41acbb2ffdf1 at16:37:13UTC. The worker started16:38:15 and is saving result files; no partial outcome contents have been read. Both primaries run before alternates with complete-cohort technical checkpoints. Fixed inference cutoff remains15September02:24:34UTC; goal remainsactive.
+
+Generic discovery reports for door ranks1/4 completed successfully. Two initial reporting commands used nonexistent door_status IDs and failed before result reads; their logs are retained, and corrected door IDs completed without changing experiments. The main manuscript PDF remains byte-identical. Current operational handoff: research/activation_causality/STATUS.md and CONFIRMATION_EXECUTION.md.
+
+## 2026-09-12 17:00 UTC — confirmation monitoring and discovery manuscript update
+
+The first confirmation supervisor session 62935 remains active. The 16:57 UTC filename-only check found 55/1,920 expected files, zero unexpected files and no terminal record; the three later cohorts have no saved results. No confirmation outcome contents or worker logs were read. All 44 frozen inference sources remain unchanged.
+
+Standalone reporting and per-cohort audit tools passed initial independent checks. Review found that historical technical failures, including failures before any result row, must remain blocking after later success. Both authors are aligning that operational gate without changing the frozen analysis or inference. Missing-only interruptions remain distinct, and no automatic error retry or adjudication override is introduced. Final certification is pending; figures are being developed from synthetic reports only.
+
+The separate causal-section proposal now includes all six closed native subspace cohorts and frozen confirmation methods. Coordinator recomputation verified its 24 new table cells against 336 raw discovery records and the six independent audit hashes (12 layouts, 305 parsed actions, 31 caps, 116 forced/native agreements). All 93 links and the original PDF hash pass. Manuscript SHA256 83ff4604c98972a7caa38cf35306fd4960bbcbb7ad2a65697b8788be9acf4f5a; coordinator review SHA256 868196558bf49d54e92fb8e0c4c7e22914f43a3229a49855267e1c864885cdf1. Previous manuscript and methods versions remain archived.
+
+Current navigation documents now distinguish the frozen supervisor workflow from historical discovery commands. The old whole-campaign ledger writer reads partial raw records internally, so its refresh is deferred until confirmation closure/cutoff; filename-only monitoring remains available. The first math-formatting replacement aborted before writing because the old TeX transpose contained a literal tab; the exact-character correction then succeeded, with original bytes preserved. No scientific settings changed. The goal remains active, with confirmation, final audits, figures and reproducibility package still required.
+
+
+## 2026-09-12 17:45 UTC — theory-foundations research campaign launched
+
+User approved a 72-hour four-role research system to rebuild the main paper theory if needed, connect it to real-data analyses and targeted local experiments, and deliver a separate revision package. Persistent goal created; workspace research/theory_foundations/ and immutable run outputs/theory_foundations/campaign_20260912T174516Z/campaign.json. Coordinator /root; theory /root/theory_researcher; empirical /root/behavior_probes; independent skeptic /root/causality_code. Start 12 September 17:45:16 UTC, new-inference cutoff 15 September 11:45:16 UTC, research deadline 15 September 17:45:16 UTC.
+
+Initial tasks audit gap semantics and source provenance, compare measurement/information-use/commitment accounts, implement mathematical checks and freeze CPU study protocols. No theory model query or experiment has run at launch. All 44 frozen activation-causality sources match the current promotion manifest; authoritative paper SHA256 045ad8af35ba7a106f97abcc6fc5afdc1bf5f34d884bae68f928ca864873e3f9 is unchanged. The existing campaign retains worker/queue ownership; no partial confirmation results/logs were read. Original Sections 2–3 numerical artifacts remain missing; the available commitment corpus is a distinct study. System launch does not complete the research goal.
+
+
+## 2026-09-12 18:00 UTC — activation confirmation reporting tools certified
+
+Standalone scripts 40/41/42 now have independent source approval. The final joint CPU run passed 67 tests (23 report, 31 technical audit, 13 figures) with warnings as errors; record confirmation_reporting_joint_cpu_check_v3.json SHA256 ecd8607da286dd2ad31e7417edc554fb7819d0df93b2fa8849ba7e91ec5ede96. Initial fixture-isolation failures remain recorded. Corrections were test-only; no production origin or historical-failure gate was relaxed. All six source/test files and 44 frozen inference files remained unchanged across the final run. Synthetic complete/cutoff figures passed independent PNG checks and coordinator PNG/PDF visual checks; no production outcomes were used.
+
+The exact 52-file reporting-source archive was published with manifest SHA256 a9828eb5829c42c19b8de4c8264d772ebc8376d6df8f9238bf411fbec506f972, and independently verified under review SHA256 86cc6f9bdeeca3e7c2c81ef645048adcb5efd97254e422a9a6e1e0c34e0890d5. The live reproduction guide's duplicate figure command was removed while preserving the archived original. Its documented source/import verifier passed in the local isolated Python environment. A separate documentation addendum preserves the corrected guide and exact executed verifier; coordinator execution-record SHA256 3975258013c2e90d7612f12c46e238cdd02b950e873732152f046613bf440d65. This records the previously observed successful command, not a second execution. All 17 guide links resolved. Complete production reanalysis is still pending.
+
+The engineer and researcher agents reached their usage limits; the coordinator took over their remaining integration work. The independent reviewer remains available and found the completion/audit/next-cohort handoff coherent. Session 62935 is still the sole activation model worker's live supervisor. Actual metadata-only readiness at 17:59:35 UTC found 209/1,920 expected contextual-primary filenames and zero unexpected files, reading only four metadata inputs. Artifact tmp/confirmation_contextual_readiness_20260912T1802Z.json SHA256 64f9d6c35750a8cd0b6550f56602a983a63c187904e2c5f8bd037c3f7ef4d71d. No partial confirmation results or worker logs were read.
+
+README, STATUS and CONFIRMATION_INTEGRATION now describe the approved reporting tools and current role availability; their prior bytes are preserved in research/activation_causality/checkpoints/20260912T180035Z/. No frozen inference source, experiment, lease, model or main PDF changed. Fresh confirmation, complete-cohort independent raw audits, the joint final analysis, actual figures, full ledger refresh, completed-results replay and final separate paper proposal remain required. The activation research goal stays active.
+
+
+### 2026-09-12 18:06 UTC — theory campaign initial theory and first audited empirical discriminator
+
+Theory/literature/framework drafts and separate manuscript outline are in research/theory_foundations/. Independent mathematical review verifies gap = selection regret + information value, including stochastic/scale counterexamples. Exact independent planner audit matches all 1,276 available archived optimal sets; original Section 2–3 artifacts still not recovered. The current PDF states 142 states; older source-note counts remain separately attributed.
+
+B1 frozen exploratory log-odds reanalysis completes 720 archived evaluations, 240 cuts, 217 decisions and 82 trajectories. Independent implementation reproduces every prediction, 82 grouped folds, four models and three numerical floors (maximum prediction difference1.95e-14). Absolute-token-time addition has held-out MAE difference+0.046384, descriptive interval[-0.000167,+0.095147]; all R² nearzero. No claim of constant-gain adequacy, equivalence or causal dynamics. Report: research/theory_foundations/coordinator_analysis/B1_REPORT.md. Source27 independently confirmed to use a forced endpoint after sampled reasoning; it is not native-action calibration.
+
+No model queries; main PDF and all44 frozen activation-causality runtime files unchanged. A1 implementation/review and substantive A2 cached-state-belief decomposition are ongoing, followed by prospective experiment selection and final revision integration. The persistent research goal remains active; system setup and initial results do not complete it.
+
+
+## 2026-09-12 18:09 UTC — final-ledger confirmation scope clarified
+
+The unchanged archived search-ledger writer is statically compatible with all four frozen confirmation specs (1,920/1,792/480/448 jobs). Independent scope review search_ledger_confirmation_scope_review_v1.json SHA256 9d982c241bac4f0925ec3a0d6addc8a4e4c95f127f299ea09a113d705767c55b binds the archived writer and exact spec hashes. Its current-row complete label does not clear prior technical failures or missing supervision; its file inventory excludes leases/supervision/model-load/full-write evidence; its selected failure-event summary can omit worker_finished errors>0; and its source graph omits alternate parent/role relationships. The dedicated script40/41 and independent raw audits remain authoritative for confirmation admissibility.
+
+SEARCH_LEDGER_GUIDE.md now states these limits, maps the exact primary/alternate roles and repeated32-layout subsets, and separates the later72 forced-only technical-preflight jobs. Guide SHA256 3c98b378701826e91853df15416f8431f4142857992add46e34939efda07b4ea; all 58 local links resolved. Prior bytes remain in checkpoints/20260912T180639Z. No ledger execution, native result/attempt/log read, source change, or model query was part of this work. Full ledger refresh still waits for whole-confirmation closure or the fixed cutoff.
+
+Supervisor session62935 remained live through two55-second polls, the latter ending approximately18:08UTC; no terminal process result was returned. This turn adds a concrete reporting-scope clarification and a verified wait. The activation research goal remains active; its scientific outcomes and final package are still pending.
+
+
+## 2026-09-12 18:25 UTC — theory campaign second archival study independently verified
+
+A1 corrected v2 analysis completes all1,276decisions/95trajectories on10fixed relative bins. Independent raw recomputation verifies21,288relative/absolute rows,210absolute-panel exclusions,810summary rows,2,000trajectory bootstrap draws and all4simultaneous primary intervals. Concentration rises0.351188→0.952872 and planner-optimal forced-action mass0.444021→0.970481. There are22original observed-action errors. These are exploratory forced-action diagnostics, not state-belief or native mechanism estimates. Initial index/count gate failure and fresh corrected execution are both preserved. Results: outputs/theory_foundations/campaign_20260912T174516Z/empirical/a1_concentration_optimality_v2/; independent audit reviews/a1_independent_recomputation.json.
+
+Stochastic-choice/sensitivity mathematics and B1 presentation figures also passed independent review. B1 frozen formula/results remain unchanged; source audit clarified log(1+zero-based last-token index)=log(included token count). Source-paper revision requirements and evidence_v3.json now link exact claims/results/limits. A2 cached-state decomposition is in technical preflight, with full fitting freeze/review still required.
+
+Preferred fresh design is N2: known next-move costs under fixed physical state, native restart/replayed-reasoning comparison and uniform-cost control. Eight CPU-only development fixtures satisfy the exact successor-distance benchmark; these are not an evaluation sample or model evidence. Exact scientific protocol, sample size and worker handoff remain pending. No model query, hosted call, source-paper modification, frozen runtime edit or other-campaign partial outcome/log read occurred. All46protected paths match at18:22. The theory research goal remains active; A2, prospective execution decision, full revision/reproducibility package and final independent claim review remain required.
+
+
+## 2026-09-12 18:30 UTC — activation confirmation operational checkpoint
+
+Supervisor session62935 remains live, verified by repeated55-second polls of the same tool handle. The approved script41 filename-only check at18:29:59UTC found278/1,920 expected contextual-primary files, zero unexpected filenames, four metadata inputs and no result-content reads. Immutable checkpoint tmp/confirmation_contextual_readiness_20260912T182958Z.json SHA256 72b5e5594b2d278a8825c9ff9a5e949f575788d582a93fdd193c704861703eef. This is operational progress, not technical or behavioral validation. The three subsequent cohorts remain unlaunched by this coordinator. STATUS now records the latest checkpoint and the completed static ledger-scope review; prior status bytes remain archived. No native outcomes or worker logs were read, no frozen source or scientific setting changed, and the research goal remains active.
+
+
+## 2026-09-12 19:00 UTC — activation confirmation operational checkpoint
+
+Supervisor session62935 remains live, verified by repeated55-second polls of the same tool handle. The approved script41 filename-only check at19:00:31UTC found360/1,920 expected contextual-primary files, zero unexpected filenames, four metadata inputs and no result-content reads. Immutable checkpoint tmp/confirmation_contextual_readiness_20260912T190030Z.json SHA256 c4d6fce1c68b5e988f68f6104b473b92b91dcfc6f9f948b357787f36980491e2. At18:43 the all-cohort filename check saw316 first-cohort files and no saved files in the later three cohorts; no cohort had unexpected filenames. These are operational counts, not technical or behavioral validation. STATUS is updated and its prior bytes archived. No outcomes or worker logs were read, no source or scientific setting changed, and the goal remains active.
+
+
+### Theory-foundations checkpoint 2026-09-12 19:12 UTC
+
+A2 cached-state/planner analysis completed and independently reproduced all15 fits,45 heads,30624 fixed and91872 stochastic rows. Primary layer15 diagnostic components offset: R rises .029042 and I falls .032377, with total change -.003334; weak decoder, upper-bound temperatures and layer-specific R pattern remain explicit. A1/A2/B1 manuscript/methods integration passed independent prose review. A3 exploratory position-readout sensitivity protocol accepted; implementation only. N2 development contexts, fixture generator and planned-denominator native aggregation passed CPU review; no new model queries/final evaluation-size freeze. Protected-source check passed46 paths. Existing activation-causality queue and worker remain untouched. Goal remains active. See research/theory_foundations/STATUS.md and registry/evidence_v4.json.
+
+
+## 2026-09-12 19:30 UTC — activation confirmation operational checkpoint
+
+The same supervisor session62935 remains live, verified through repeated55-second handle polls. The approved script41 filename-only check at19:30:13UTC found464/1,920 expected contextual-primary files, zero unexpected filenames, four metadata inputs and no result-content reads. Immutable checkpoint tmp/confirmation_contextual_readiness_20260912T193012Z.json SHA256 529c5de8375baf34682a5c3713a1d48f49ef2827c3d6419cff196235dbd015c5. A separate specification-bound filename count at19:14 saw405/1,920 with zero unexpected files. These are operational counts only; technical and behavioral status remain unassessed. STATUS is updated and prior bytes archived. No outcomes or worker logs were read, no source or scientific setting changed, no later cohort launched, and the goal remains active.
+
+
+### Theory-foundations checkpoint 2026-09-12 19:51 UTC
+
+A3 completed its frozen CPU run and full independent refit/probability/metric/bootstrap/figure audit. Both specified alternatives worsen primary NLL/Brier; all30 layer/fold alternatives select T4. These results retain the decoder limitation and do not establish absent latent information. Four archival studies A1/A2/A3/B1 are now checked; A3 manuscript integration is underway. N2 internal execution, supervisor, provenance reader, identity/numerical/sizing/handoff components are under staged CPU review; no production launcher, actual pilot/evaluation freeze, model handoff or new model query. Existing activation-causality worker/queue remain untouched. Protected check at19:44 passed46 paths. Persistent goal remains active; see research/theory_foundations/STATUS.md and registry/evidence_v5.json.
+
+
+### Activation-causality continuation — 2026-09-12 20:00 UTC
+
+The same first frozen confirmation supervisor remains active as session 62935, verified by the 55-second poll ending 19:59:44 UTC. A truncated preceding tool response did not trigger a restart. Script41 filename-only readiness at 19:57:09 UTC recorded 525/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T195900Z.json`, SHA256 `4b98c8c61dc9f96c64b2817f88681dd287aaef2a7ca1ae1af0011e5f7313d640`). The tool-only 20:00:09 UTC inventory recorded 530/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts include any saved technical-error rows and do not certify success. No outcomes, attempts or worker logs were opened; no runtime, frozen plan, selection, seed or model changed. STATUS.md was checkpointed before this operational update. The goal remains active, awaiting exact cohort closure and independent raw audit before the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-12 20:30 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 55-second polls of session 62935, most recently ending 20:30:21 UTC. Script41 filename-only readiness at 20:30:44 UTC recorded 634/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T203030Z.json`, SHA256 `a3c2e187b789bfaa25cedb553f98ae444de8618704ff88e8e623ebd914bc287a`). A tool-only all-cohort inventory at 20:30:22 UTC recorded 633/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and no inference source or frozen specification was changed. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+### 2026-09-12 20:33 UTC — theory campaign production integration
+
+All four archival studies and replacement prose are independently accepted. Added reviewed component integrations and a local production launcher/worker under independent review, exact CPU numerical-stage preparation (no model or weight read), strict complete64-pool sizing rule and pilot metadata projection. Source PDF/protected46 paths passed20:15 check. No handoff, actual numerical gate, pilot or model query; goal active. See research/theory_foundations/STATUS.md.
+
+
+### Activation-causality verified wait — 2026-09-12 21:00 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45–55-second polls of session 62935, most recently ending 21:00:40 UTC. Script41 filename-only readiness at 21:00:52 UTC recorded 700/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T210050Z.json`, SHA256 `1395fb6a5bea19fbcee3ad8f7b742ced42b4b2566d15c2904c7036341f019982`). The tool-only all-cohort inventory at 21:00:41 UTC recorded 699/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and no inference source or frozen specification was changed. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Theory-foundations delivery checkpoint — 2026-09-12 21:14 UTC
+
+The separate 25-page provisional revision and portable PDF/LaTeX ZIP are independently accepted; all 50 bundle files match their sources. Four archival studies A1/A2/A3/B1 are audited and N2 remains explicitly prospective. The single 64-layout evaluation pool (258 candidates, 1,408 context bounds) is independently accepted and must not be regenerated. Actual CPU identity candidate v1 exposed an unbound existing Python startup hook and was rejected before any MLX/model/launch claim; candidate, failure and exact earlier source archive are preserved. The explicit startup-closure amendment passes author tests and awaits independent source/actual-artifact review. All 46 protected paths passed at21:09 UTC. No model query or handoff; the72-hour goal remains active. See research/theory_foundations/STATUS.md and its README links for the delivered PDF/ZIP.
+
+Reading this shared history also exposed the other campaign's owner-authored21:00 operational update (session62935 live,700/1,920 filename readiness). This is attributed owner metadata, not a new process observation or a whole-queue release. The theory campaign has not polled its session or read partial results/logs and continues to preserve the full queue's priority.
+
+
+### Activation-causality verified wait — 2026-09-12 21:30 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 21:30:43 UTC. Script41 filename-only readiness at 21:30:57 UTC recorded 780/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T213050Z.json`, SHA256 `2d0eb6d3fa444fb6444425318c380107091d12417cc47a2ef36f0c82a41d3721`). The tool-only all-cohort inventory at 21:30:44 UTC recorded 779/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and no inference source or frozen specification was changed. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Theory-foundations runtime readiness — 2026-09-12 21:42 UTC
+
+The actual startup amendment and fresh numerical runtime candidate v2 are independently accepted. The byte audit checked7,496 paths, including all three weight shards,34 declared dependency closures,99 source files and46 protected files;250 loaded CPU module files match. No MLX/model/query/launch claim or handoff. Native Python sources are held fixed. Exact current stage/startup/candidate/acceptance references are in research/theory_foundations/coordinator_analysis/N2_RUNTIME_READINESS.md and the immutable numerical_v1/readiness_v1.json. The accepted manuscript/ZIP and single64-layout pool remain preserved. The only new execution dependency is legitimate whole-queue release from the priority activation-causality campaign; its worker/queue remain untouched. The72-hour goal remains active.
+
+
+### Theory-foundations final local delivery / shared-resource block — 2026-09-12 22:01 UTC
+
+Final claim-map review corrected two notation/assumption ambiguities; all scientific numbers and the accepted manuscript PDF/TeX/figures remain unchanged. The separately versioned v2 ZIP is independently accepted (SHAed78f526595f03d30645d98667e82bb402e8dbe4140aff37d506a8a9da9522d3;52members,47unchanged/3changed/2added). All independently executable work is complete. Fresh21:58UTC process metadata confirms the same prior supervisor79885 and worker79914 live; no result/log/session content, model load/query or prior signal. After the same missing whole-queue release persisted across three goal turns, the theory goal was marked blocked on this external dependency, not complete. Exact prepared native inputs, original scope and fixed15September cutoffs remain preserved. Resume from research/theory_foundations/STATUS.md and registry/blocked_audit_v1.json after legitimate whole-queue handoff; do not take a gap between cohorts or start a second model.
+
+
+### Activation-causality verified wait — 2026-09-12 22:00 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 22:00:28 UTC. Script41 filename-only readiness at 22:00:42 UTC recorded 857/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T220040Z.json`, SHA256 `d24d4f1766e927093201672dad509092874594b923a43086e95489acc3857e77`). The tool-only all-cohort inventory at 22:00:28 UTC recorded 857/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and no inference source or frozen specification was changed. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-12 22:30 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 22:30:31 UTC. Script41 filename-only readiness at 22:30:52 UTC recorded 924/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T223040Z.json`, SHA256 `22ee673b3f11de8f48c62f2ef919b54324330634790ceede73a05f87cb7b6bfe`). The tool-only all-cohort inventory at 22:30:32 UTC recorded 924/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and no inference source or frozen specification was changed. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-12 23:00 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 23:00:32 UTC. Script41 filename-only readiness at 23:00:53 UTC recorded 974/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T230040Z.json`, SHA256 `764b770b85a6ed77d2a58a0322b018599c7c45bcfd70cbedb6bd67c44cd8eada`). The tool-only all-cohort inventory at 23:00:33 UTC recorded 974/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. The first cohort reached half its expected file inventory at 22:51:11 UTC. These counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and no inference source or frozen specification was changed. STATUS.md was preserved before this operational update. All checkpoint times remain UTC despite the local London date advancing to September 13. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-12 23:30 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 23:30:20 UTC. Script41 filename-only readiness at 23:30:38 UTC recorded 1,060/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260912T233030Z.json`, SHA256 `d70dcc6d941e8441e4f9e26e7f83709bb9b9f41826efe4228aac26771ed00cc0`). The tool-only all-cohort inventory at 23:30:21 UTC recorded 1,060/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. The first cohort reached 1,000 expected files at 23:10:22 UTC. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and the coordinator changed no inference source or frozen specification. STATUS.md was preserved before this operational update. All checkpoint times remain UTC. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-13 00:00 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 00:00:01 UTC. Script41 filename-only readiness at 00:00:15 UTC recorded 1,129/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260913T000015Z.json`, SHA256 `652619cf077c55b902f60c561e916b1387dad4f0a2333e9591114fd964e4959b`). The tool-only all-cohort inventory at 00:00:01 UTC recorded 1,129/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and the coordinator changed no inference source or frozen specification. STATUS.md was preserved before this operational update. All checkpoint times remain UTC; the campaign ID and frozen cutoff remain unchanged across midnight. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-13 00:30 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 00:30:28 UTC. Script41 filename-only readiness at 00:30:45 UTC recorded 1,193/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260913T003040Z.json`, SHA256 `fb077da4346da3cfc7c5debdbc0b0fde20745393ce3db2298b79cc6a11ffb4eb`). The tool-only all-cohort inventory at 00:30:28 UTC recorded 1,193/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. The first cohort reached 60% of its expected filename inventory at 00:10:50 UTC. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and the coordinator changed no inference source or frozen specification. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-13 01:00 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated 45-second polls of session 62935, most recently ending 01:00:28 UTC. Script41 filename-only readiness at 01:00:45 UTC recorded 1,254/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260913T010040Z.json`, SHA256 `495a95d15a5997c7f882c89fe1257a6a4a5359de96f73ee963e0196bcb6d0a9e`). The tool-only all-cohort inventory at 01:00:29 UTC recorded 1,253/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and the coordinator changed no inference source or frozen specification. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-13 01:30 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated direct polls of session 62935, most recently ending 01:30:05 UTC. Script41 filename-only readiness at 01:30:21 UTC recorded 1,327/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260913T013020Z.json`, SHA256 `ebfb53154fd50cc21011afd033ebdcd8a6d2520eeed00e64cddaced82ed012f1`). The tool-only all-cohort inventory at 01:30:06 UTC recorded 1,325/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and the coordinator changed no inference source or frozen specification. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### Activation-causality verified wait — 2026-09-13 02:00 UTC
+
+The same first frozen confirmation supervisor was confirmed live by repeated direct polls of session 62935, most recently ending 02:00:34 UTC. Script41 filename-only readiness at 02:00:58 UTC recorded 1,420/1,920 expected files, zero unexpected files, four metadata inputs and no result-content reads (`tmp/confirmation_contextual_readiness_20260913T020050Z.json`, SHA256 `64fde98140df6c7a2e56a961c5258234951b27717bf1efd329c678d93374d186`). The tool-only all-cohort inventory at 02:00:35 UTC recorded 1,419/1,920 contextual-primary files and 0/1,792, 0/480, 0/448 for later cohorts, with no unexpected filenames. Counts do not certify technical or behavioral success. No outcomes, attempts or worker logs were opened, no process was restarted, and the coordinator changed no inference source or frozen specification. STATUS.md was preserved before this operational update. The research goal remains active; exact cohort closure and independent raw audit still precede the next single-cohort launch.
+
+
+### 2026-09-13 02:29 UTC — activation confirmation verified wait
+
+Continued polling the same live supervisor session `62935`; the most recent poll ended at 02:29:09 UTC without a terminal result. A prior truncated tool response was treated as unknown, not as permission to restart. Script41 filename-only readiness at 02:28:26 UTC recorded 1,501/1,920 contextual-primary files, no unexpected files, four metadata inputs and `result_contents_read: false`: `tmp/confirmation_contextual_readiness_20260913T022830Z.json` (SHA256 `433ea4064491a7e47ffd0ba09114780495af29dbd2c89503c22a68b9f308470f`). The independent all-cohort filename inventory at 02:28:13 UTC recorded 1,500/1,920, 0/1,792, 0/480 and 0/448, with zero unexpected files. These are operational counts; technical and behavioral outcomes remain unassessed. No confirmation raw files, attempts or worker logs were read; no inference code, model configuration, frozen plan, tests or cohort order changed. The prior STATUS.md was preserved before the operational update. The goal remains active; complete-cohort audit and independent review precede the next single-cohort launch.
+
+
+### 2026-09-13 03:00 UTC — activation confirmation verified wait
+
+Continued repeated direct polling of the same live supervisor session `62935`; the most recent poll ended at 02:59:50 UTC without a terminal result. Script41 filename-only readiness at 03:00:16 UTC recorded 1,584/1,920 contextual-primary files, no unexpected files, four metadata inputs and `result_contents_read: false`: `tmp/confirmation_contextual_readiness_20260913T030000Z.json` (SHA256 `12e0525c82901acd5df4ef5f44f47bb6ee5351f07bb40ee5e61ee54e2e8b211f`). The all-cohort filename inventory at 02:59:50 UTC recorded 1,583/1,920, 0/1,792, 0/480 and 0/448, with zero unexpected files. Technical and behavioral outcomes remain unassessed. The agent inventory reconfirmed the reviewer idle after its completed scope review and the two previously recorded agent usage limits. No confirmation raw files, attempts or worker logs were read; no inference code, model configuration, frozen plan, tests or cohort order changed. The prior STATUS.md was preserved before the operational update. The goal remains active; complete-cohort audit and independent review precede the next single-cohort launch.
+
+
+### 2026-09-13 03:30 UTC — activation confirmation verified wait
+
+Continued repeated direct polling of the same live supervisor session `62935`; the most recent poll ended at 03:29:50 UTC without a terminal result. Script41 filename-only readiness at 03:30:03 UTC recorded 1,688/1,920 contextual-primary files, no unexpected files, four metadata inputs and `result_contents_read: false`: `tmp/confirmation_contextual_readiness_20260913T033000Z.json` (SHA256 `2706a3c5e6adb7767b74aa032798816753146a47c0e02a9e6c163a3debe3fc8e`). The all-cohort filename inventory at 03:29:50 UTC recorded 1,687/1,920, 0/1,792, 0/480 and 0/448, with zero unexpected files. Technical and behavioral outcomes remain unassessed. No confirmation raw files, attempts or worker logs were read; no inference code, model configuration, frozen plan, tests or cohort order changed. The prior STATUS.md was preserved before the operational update. The goal remains active; complete-cohort audit and independent review precede the next single-cohort launch.
+
+
+### 2026-09-13 04:00 UTC — activation confirmation verified wait
+
+Continued repeated direct polling of the same live supervisor session `62935`; the most recent poll ended at approximately 04:00:03 UTC without a terminal result. Script41 filename-only readiness at 04:00:17 UTC recorded 1,790/1,920 contextual-primary files, no unexpected files, four metadata inputs and `result_contents_read: false`: `tmp/confirmation_contextual_readiness_20260913T040010Z.json` (SHA256 `b171acea50b83af7c13f3aa79e86376b1f1f2c3b38eb6e3b6e7c43e4ad52ac29`). The all-cohort filename inventory at 04:00:04 UTC recorded 1,790/1,920, 0/1,792, 0/480 and 0/448, with zero unexpected files. Technical and behavioral outcomes remain unassessed. No confirmation raw files, attempts or worker logs were read; no inference code, model configuration, frozen plan, tests or cohort order changed. The prior STATUS.md was preserved before the operational update. The goal remains active; complete-cohort audit and independent review precede the next single-cohort launch.
+
+
+### 2026-09-13 04:30 UTC — activation confirmation verified wait
+
+Continued repeated direct polling of the same live supervisor session `62935`; the most recent live poll immediately preceded the 04:30:01 UTC filename inventory. Script41 filename-only readiness at 04:30:16 UTC recorded 1,860/1,920 contextual-primary files, no unexpected files, four metadata inputs and `result_contents_read: false`: `tmp/confirmation_contextual_readiness_20260913T043010Z.json` (SHA256 `c38177d001ee1fae045c113b0ba651696f6583c98d7b0c375399989c7fb74ddf`). The all-cohort filename inventory at 04:30:01 UTC recorded 1,860/1,920, 0/1,792, 0/480 and 0/448, with zero unexpected files. Technical and behavioral outcomes remain unassessed. No confirmation raw files, attempts or worker logs were read; no inference code, model configuration, frozen plan, tests or cohort order changed. The prior STATUS.md was preserved before the operational update. The goal remains active; complete-cohort audit and independent review precede the next single-cohort launch.
+
+
+### 2026-09-13 05:10 UTC — first activation confirmation cohort closed; reporting correction
+
+Session62935 exited0 with all1920 contextual-primary files and zero worker errors at04:53:47UTC. Automated auditv1 failed an invented after_l2 requirement; original failed JSON SHA761beefc351a1a66a75756352beb73f56e14d39d04baec7bfb878a3aee23bd45 and invocation record are preserved. Independent diagnosis also found whole-dictionary compiled-donor equality and contextual restoration baseline assumptions. Reporting scripts40/41 and tests were corrected against frozen runtime/spec semantics; no inference/result changes. Actual engine-emitter CPU fixtures plus corruption/baseline regressions pass75 joint tests (recordSHA1049eec5f8db0e76790d420ba654dee2bc9657deb6269c3ddec811d0987f844a), Ruff passed, and all44 inference files remain unchanged. Corrected automatedv2 passes (SHA83d96dad9f2fac73a36c72e1cea0e99b2d656881584348307bac4ebb8f6cdc54). Independent raw recomputation agrees on technical checks; final held-source/v2 certification is pending. No next cohort or global statistical report has run. Versioned reporting archive/guide integration remains in progress.
+
+
+### 2026-09-13 05:30 UTC — first confirmation cleared; wall primary running
+
+Final contextual-primary independent review SHA9e6a35635a04b3683bff1fcca56e4e7832eb88ddfd8af9147c02591abb15c872 approves technical progression and exact automated-v2 agreement: 1,920 technically complete trials, 1,732 native completions, 188 retained unresolved caps, 256 identity and 256 required norm checks passing, no technical errors. Source correction certificate SHA33f931b79736f855b480267881c8fb7ced4eb1d9d4ffb6b82f9299ae64920e91 binds current reporting files; inference/runtime/results remain unchanged. Wall primary launched at05:13:58UTC under session91403, supervisor30690, worker30948 and lease1a8b25d273994982b93fc03c5c4285f2; launch integration SHA fefe04df2653cddfb6294cb51a29c75fd36ee87ba9c62a66a7fd6eeae2f3a710. Direct live poll and filename-only inventory at05:25:28UTC show22/1792, zero unexpected, alternates0/480 and0/448. No partial wall outcomes/attempts/logs read and no joint statistics run. Updated guide source/import verifier passed (recordSHAc4c8b97d742c5f5ec17d5a7b522213a813bc366a61d9f385c5fa45e45584e835). New reporting correction archive SHAbe9418633310f88feda7edd503401dedeb500b967768310e77c38af8504b9519 contains41 hash-verified payloads; independent archive/guide review is underway. STATUS, README and integration guide were updated after preserving prior bytes. The fixed study and active goal continue.
+
+
+### 2026-09-13 05:30 UTC — reporting correction archive independently approved
+
+Independent archive/guide review SHA3c1e3183f78cfc182371848e8179e50fd27558350decbd441e2cc43baa75f8d6 approves all41 correction payloads, historical52 payloads, current7 reporting source/test files and archived/current44 inference files. Its exact documented verifier replay passed under an outcome/log/model-weight read guard; all218 inputs stayed stable and were rechecked by the coordinator. The coordinator integrated this approval into STATUS, README and the integration guide after preserving prior bytes. Wall-primary metadata-only readiness at05:29:12UTC records29/1792, zero unexpected files and no result reads (SHA96587de05540b430b6eb22c7c264adaec17b77f502d18b0d22a37803105e01a7); the subsequent direct poll of session91403 remained live. No frozen source, model configuration, outcome, scientific decision or cohort order changed. The goal remains active; joint results and remaining deliverables await cohort closure or fixed cutoff.
+
+
+### 2026-09-13 06:00 UTC — wall-primary verified wait
+
+The same supervisor session91403 remained live on direct polling before the06:00:20UTC filename inventory. That inventory records contextual primary1920/1920, wall primary103/1792, contextual alternate0/480 and wall alternate0/448, with no unexpected files. Script41 metadata-only readiness finished06:00:40UTC with103/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T060020Z.json (SHAa973b83c5e04ef6ea09f8cc9b44374c7c0ca5364b74231d3f2276895dd073513). All44 frozen inference files and seven reviewed reporting source/test files were rechecked and remain byte-identical. Prior STATUS was preserved before this operational update. No partial wall raw results, attempts or worker logs were opened; no model settings, frozen plan, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 06:30 UTC — wall-primary verified wait
+
+The same supervisor session91403 remained live on direct polling before the06:30:34UTC filename inventory. That inventory records contextual primary1920/1920, wall primary185/1792, contextual alternate0/480 and wall alternate0/448, with no unexpected files. Script41 metadata-only readiness finished06:30:52UTC with186/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T063035Z.json (SHA1ac5330e61d9204e5e87f409662952f7848f6bfa07b958d01c2c931a234f990f). Prior STATUS was preserved before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 07:00 UTC — wall-primary verified wait
+
+The same supervisor session91403 remained live on direct polling before the07:00:25UTC filename inventory. That inventory records contextual primary1920/1920, wall primary243/1792, contextual alternate0/480 and wall alternate0/448, with no unexpected files. Script41 metadata-only readiness finished07:00:47UTC with243/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T070025Z.json (SHAd47ff72d6f7cd7656d52b063c43aad502b564b283f4502428116527cae1e9071). All44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved before the operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+## Theory foundations — data regeneration clarification, 2026-09-13T07:03:55.251281+00:00
+
+User instruction: “reproduce data when needed.” Updated standing instructions/charter so missing original Sections 2–3 files do not require another external-path question. Completed a metadata-only successor-coverage and missing-state inventory in `outputs/theory_foundations/campaign_20260912T174516Z/empirical/regeneration_successor_coverage_v2/`; v1 and executed source snapshots are preserved. Independent canonical reconstruction matched all v2 tables: 281/1,276 pooled eligible decisions, zero strict held-out comparisons, and 1,406/5,159 missing states for observed-choice/full-support analyses, each including95terminals. No actions, probabilities or activation arrays were read by the coverage job; zero new fits/model queries. Reuse accepted A2/A3; conditional independent-bank requirements are recorded, with no new inference assignment. Original paper, accepted manuscript packages, native sources, shared-worker priority and fixed15September cutoffs are unchanged. Entry point: `research/theory_foundations/coordinator_analysis/DATA_REGENERATION.md`; machine decision: `research/theory_foundations/registry/data_regeneration_decision_20260913.json`.
+
+
+### 2026-09-13 07:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 07:30:20 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 325/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 07:30:36 UTC with 325/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T073020Z.json (SHA256 506ed7ffe8468450621a2d6402a08df97eaad748270dd7a6d355ec174f43662e). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T073139Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 08:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 08:00:21 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 405/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 08:00:28 UTC with 405/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T080021Z.json (SHA256 f7968114111906c716c085acad1987a30dfe9250a73f5741187cb2a51019c702). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T080118Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+## Theory foundations — resumed shared-worker check, 2026-09-13T08:23:10.124417+00:00
+
+Goal observed active; previous regeneration turn classified as progress. Fresh read-only process metadata at 08:21:13 UTC confirms priority-campaign wall_subspace_primary supervisor 30690 (start 05:13:03 UTC) and model worker 30948 (start 05:13:58 UTC), both non-zombie Ss. Independent skeptic verified the exact filtered observation and accepted verified wait only. This is the first dependency turn in the fresh resumed audit. The full capture passed; the retained filtered artifact is explicitly not a launch handoff snapshot. Default sandbox ps denial was resolved by automatic approval of the same read-only check. No prior results/logs/session were opened, no existing process was signaled, and no model operation occurred. Next scientific action remains legitimate whole-queue handoff followed by the accepted N2 numerical gate; all fixed dates and sources preserved. Record: `research/theory_foundations/registry/resumed_resource_audit_20260913_v1.json`.
+
+## Theory foundations — second resumed verified wait, 2026-09-13T08:24:34.118465+00:00
+
+Fresh metadata at 08:23:50 UTC again confirms priority-campaign supervisor 30690 and model worker 30948 live, both Ss, with unchanged start identities and wall_subspace_primary commands. Exact observation SHA256 `8c3f50d632f5d51a50a84f0dd276091fa959ca0185342c5b3629a106ccae6279`. No prior session/results/logs read, process signal or model operation. The goal remains active; fresh resumed dependency count is two. Record: `research/theory_foundations/registry/resumed_resource_audit_20260913_v2.json`. Scope, accepted sources and deadlines unchanged.
+
+## Theory foundations — resumed goal marked blocked, 2026-09-13T08:26:35.203980+00:00
+
+Fresh process observation at 08:24:59 UTC confirms priority-campaign supervisor 30690 and worker 30948 still live in Ss with unchanged wall_subspace_primary start/command identities. This is the third consecutive verified whole-queue dependency turn in the fresh resumed audit. No substantive independent work remains under the accepted plan. The persistent goal was marked blocked, not complete; numerical gate, complete pilot, timing-only evaluation sizing, native evaluation and final integration remain required. Resume only on legitimate whole-queue release or the accepted elapsed-prior-cutoff/terminal-worker route, with fresh full process metadata and default shared lock. No new model inference, prior-process signals, result/log/session access or accepted-source changes. Fixed inference cutoff 15 September 11:45:16 UTC and research deadline 17:45:16 UTC preserved. Audit: `research/theory_foundations/registry/resumed_resource_audit_20260913_v3.json`, SHA256 `d2592448612057c2a82195752ac648e93c894a00854ab08a6f39d47d63c6e231`.
+
+
+### 2026-09-13 08:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 08:30:18 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 488/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 08:30:31 UTC with 489/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T083018Z.json (SHA256 c94aa2c5d58c85584b8216f7c9eaa4257cccca7fbbdba4d5eae49ea7db13c822). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T083108Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 09:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 09:00:06 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 557/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 09:00:24 UTC with 558/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T090006Z.json (SHA256 8c0104d2130961aa247f3602a15ee9b8f9866ec539a60d034332b12161ed0e18). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T090116Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+## Theory foundations — resumed verified wait, 2026-09-13T09:18:28.332026+00:00
+
+Goal observed active again at 09:16 UTC. Fresh metadata at 09:17:09 UTC confirms unchanged priority-campaign supervisor 30690 (Ss) and worker 30948 (Rs), with their original start identities and wall_subspace_primary commands. First verified dependency turn in resumption 20260913T091652Z; goal left active. No model operations, prior signals, or result/log/session reads. Scope, fixed deadlines and accepted sources preserved. Record: `research/theory_foundations/registry/resume_20260913T091652Z_turn1.json`.
+
+## Theory foundations — second verified wait in current resumption, 2026-09-13T09:19:46.771644+00:00
+
+At 09:19:04 UTC, the same priority supervisor 30690 and worker 30948 were both live in Ss with unchanged start/command identities. Second consecutive dependency turn in resumption 20260913T091652Z; goal remains active. No inference, prior-process signals or result/log/session access. Scope and deadlines unchanged. Record: `research/theory_foundations/registry/resume_20260913T091652Z_turn2.json`.
+
+## Theory foundations — current resumption blocked, 2026-09-13T09:21:20.609076+00:00
+
+At 09:20:12 UTC the same priority supervisor 30690 (Ss) and worker 30948 (Rs) remained live with unchanged start/command identities. Third consecutive verified dependency turn in resumption 20260913T091652Z; persistent goal marked blocked, not complete. No substantive independent task remains before whole-queue release. Numerical gate, pilot, native evaluation and final integration are preserved, together with fixed 15 September inference/research cutoffs. No model operation, prior signal or result/log/session access. Audit: `research/theory_foundations/registry/resume_20260913T091652Z_turn3.json`, SHA256 `d5b450957f6839f3a59fc66c1c025f4bf460c848e102cd76f4af22c76e3ae1a9`.
+
+
+### 2026-09-13 09:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 09:30:15 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 624/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 09:30:29 UTC with 624/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T093015Z.json (SHA256 c658ee0c02e94d3190f4acf47a74deb0a5e4dfdac0a42de267ea42a6bfdf9a12). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T093057Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 10:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 10:00:18 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 692/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 10:00:27 UTC with 692/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T100018Z.json (SHA256 3cb30b4c0be492f24476c84dd5b4157b8383f0dda27071d92a52f97f9e843c6c). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T100116Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 10:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 10:30:07 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 766/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 10:30:25 UTC with 767/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T103007Z.json (SHA256 3bdfaac3701b2ab10409be76a7a61a0e44df7d08557edfe886b4fc2c303c13a4). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T103112Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 11:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 11:00:07 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 820/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 11:00:25 UTC with 820/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T110007Z.json (SHA256 1f66581a8407b436157ef39e01b94b258ec272bf592ebf4ca9f1a1fa8c27de5f). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T110108Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 11:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 11:30:06 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 899/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 11:30:22 UTC with 899/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T113006Z.json (SHA256 468331e2da5320b0572290bd6a7ff914e646f82acbee26dbac806343a7e29d66). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T113105Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 12:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 12:00:17 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 978/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 12:00:32 UTC with 979/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T120017Z.json (SHA256 5e30f6aad915798d346a0aeb4e4195b1bb9a11cdd66d3a18c59523953ccd3f94). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T120119Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 12:28 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 12:28:03 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1055/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 12:28:21 UTC with 1056/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T122803Z.json (SHA256 0eb8e533879215c4716c71762991f59807d81f064437a4787f3f773f33f77369). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T122932Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 12:59 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 12:58:49 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1121/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 12:59:01 UTC with 1122/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T125849Z.json (SHA256 78e0e787770c333e0999fd2a642ace48ada6dcee702747ea3d2998fb8c81db79). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T125946Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 13:29 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 13:29:06 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1185/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 13:29:20 UTC with 1186/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T132906Z.json (SHA256 35f70fd19aac3f1f34bf43f4771953d813cba8891eac1feabc140e34e8e2aa8e). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T133001Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 13:59 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 13:59:18 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1239/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 13:59:31 UTC with 1239/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T135918Z.json (SHA256 ed186713ce0f8798220995ad732bc34d57843f9d7b4e13966c0745521f53fea1). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T140015Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 14:29 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 14:29:03 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1313/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 14:29:17 UTC with 1313/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T142903Z.json (SHA256 0940be9a43ce4d46fd3db778a69712e1bc81af8ef2002a448df99d40a58497ca). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T143008Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 14:59 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 14:59:10 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1389/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 14:59:23 UTC with 1390/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T145910Z.json (SHA256 971c199752414dbb6f3092a34932980c257ced3e4043133e9d969361bf9f8f42). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T150017Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 15:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 15:29:41 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1462/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 15:30:05 UTC with 1463/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T152941Z.json (SHA256 0f083cd70cf053430e92e0e7d10c6742ebe97183c86465094c8d9d56c231c923). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T153056Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 16:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 15:59:42 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1525/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 15:59:56 UTC with 1526/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T155942Z.json (SHA256 8d4bbc649a407761d29556d2d2416872c9a089364db83ff6054be0c72104d977). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T160047Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 16:15 UTC — theory campaign automatic conditional resumption
+
+The user authorized resuming the theory goal when appropriate. A separate bounded metadata watcher started at 16:14:44 UTC, PID 90875, owned exec session 79959; its first successful capture found priority supervisor 30690 and worker 30948 still live, and it is waiting. Every 600 seconds it checks dedicated release filenames, all four exact frozen job filename sets plus narrowly matched independent-review metadata, and fresh complete process metadata. It reads no result or worker-log contents. Triggers request renewed same-thread coordinator review through the supported public Codex CLI; they never authorize model work. A harmless same-thread CLI delivery check succeeded. No research wake-up or model operation had occurred at launch recording.
+
+Eight focused tests and independent source review passed. Review: research/theory_foundations/reviews/RESUME_WATCHER_REVIEW_20260913.md. Launch record: research/theory_foundations/registry/resume_watcher_launch_20260913.json. Active records: outputs/theory_foundations/campaign_20260912T174516Z/coordinator_analysis/resume_watch_20260913T161500Z/. The watcher has a separate lock, monotonic lifetime bounds, cancellation file and one durable delivery attempt. It requests reporting at the unchanged 15 September 11:45:16 UTC inference cutoff and expires at 17:45:16 UTC. It requires the local Mac/Codex to remain running. Goal storage, native sources, existing runtime/queue and accepted science/manuscript remain unchanged; whole-queue handoff and every existing native-study gate still apply.
+
+
+### 2026-09-13 16:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 16:29:13 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1604/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 16:29:20 UTC with 1605/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T162913Z.json (SHA256 a585368fbdb8647c6d210b4d555f76d1b3678db6a0a0c199044e7047e4580566). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T163006Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 17:00 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 16:59:07 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1670/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 16:59:18 UTC with 1670/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T165907Z.json (SHA256 2ff3abf4c624a0de1e13bc3259d19a4a4fcf088fa6d5242a4e31dde18eb972f2). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T165958Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 17:30 UTC — wall-primary verified wait
+
+The same supervisor session 91403 remained live on direct polling before the 17:29:07 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1750/1792, contextual alternate 0/480 and wall alternate 0/448, with no unexpected files. Script 41 metadata-only readiness finished 17:29:23 UTC with 1753/1792 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_readiness_20260913T172907Z.json (SHA256 7b6476d5178031eade028b66a0676b0a193394506b8542872be508356fb4ce70). All 44 frozen inference files and seven independently reviewed reporting source/test files remain byte-identical. Prior STATUS was preserved in research/activation_causality/checkpoints/20260913T173004Z/ before this operational update. No partial wall raw results, attempts or worker logs were opened; no inference code, model settings, frozen plan, tests, cohort order or scientific analysis changed. The goal remains active; wall closure, owned terminal and complete automated/independent technical audits precede the next single-cohort launch.
+
+
+### 2026-09-13 17:47 UTC — wall-primary closed; independent audit pending
+
+Supervisor session91403 closed with exit0 at17:42:02 UTC after all1792 exact planned wall-primary files, zero unexpected. Worker_finished at17:42:01 UTC reports completed1792/errors0; no earlier cohort failure events. Immutable terminal SHA256 421b03dc7d44bb35c69a1bcdbcdc768e2aee4c3205f1df4a59cabe75af8f9d75. Script41 automated_v1 passed, SHA256 1c4731f189a3dad0941aad8a301312cd51d10a64e2c4ce11ddda4cb597cda8d7, CPU session64592 exit0:1792 technically complete,1555 native completions,237 retained token caps,256 exact identity replays,512 projected-norm checks,14 conditions×128 trials,zero historical attempts. Independent reviewer is recomputing complete raw technical evidence; no next cohort has launched and no global statistical decisions have run. Coordinator closure record: outputs/activation_causality/campaign_20260912/reviews/wall_primary_cohort_closure_coordinator_v1.json (SHA256 e8f0e00f1fa6a5ce1e80bbaf3b528e8eed2474285a63688d29e5c5a0dd12fadd). All44 inference files,7 reporting source/test files and main PDF remain unchanged. No partial wall raw outcomes, attempts or worker logs were opened before closure. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T174731Z/. Goal remains active; complete independent approval is required before contextual alternate480, then wall alternate448, and final joint reporting/replay/figures/ledger/proposal remain pending.
+
+
+### 2026-09-13 18:00 UTC — wall independently approved; contextual alternate launched
+
+Wall-primary independent review SHA256 f764cdbedf217947782b4643eee62de26277695648fc6801c16f797aa1c035e0 approves technical progression:1792 complete technical rows,1555 native completions,237 retained caps,256 baseline identities and512 projected-norm gates. Coordinator rechecked all1892 input hashes and44 inference+7 reporting source/test files before launch (check SHA256 f66e5ed93eef03c89a4532d43c5c8d107e8ed1354261ac8d888b342d48ba8c8b). Reviewer-only float64 diagnostic and both source versions remain preserved; no inference/reporting/result/tolerance change. Supervisor19207 launched contextual alternate480 at17:54:49 UTC, worker_started17:55:46 UTC; supervisor PID92738, worker/group92742, leasecdc315830a154437aaf4f037ef160da9. Third execution record SHA256 3cf52b20e84cf3f04d4fd8ab94832fe7f519ee8275ad459abfffc896ed89cd5d binds both primary approvals and launch. Metadata-only readiness records5/480 at17:57:22 UTC (SHA256 3121fb61860b826f8d7671f9a4c2cbb76273dea8fbd9478a5bb685d1e66b3191); wall alternate remains0/448. No partial contextual-alternate raw results, attempts or worker logs have been opened and no joint statistical decisions have run. STATUS/README/integration prior bytes preserved in research/activation_causality/checkpoints/20260913T180015Z/. Goal remains active; next cohort requires complete independent audit, and final joint results/figures/ledger/replay/proposal remain pending.
+
+
+### 2026-09-13 18:30 UTC — contextual-alternate verified wait
+
+The same supervisor session19207 remained live on direct polling before the18:28:53 UTC filename inventory. That inventory records contextual primary1920/1920, wall primary1792/1792, contextual alternate82/480 and wall alternate0/448, with zero unexpected files. Both primary cohorts retain independent technical approval. Script41 metadata-only readiness finished18:29:06 UTC with83/480 and four metadata inputs, result_contents_read:false: tmp/confirmation_contextual_alternate_readiness_20260913T182853Z.json (SHA256 82d59d34ded27024efcf622d5eacb28510ffacbfbe07a44590b6a7c6afdb2682). All44 inference files and7 independently reviewed reporting source/test files remain byte-identical. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T183008Z/. No partial contextual-alternate raw results, attempts or worker logs were opened; no source, model settings, frozen plan, tests, cohort order or scientific analysis changed. Goal remains active; contextual-alternate closure and complete automated/independent technical audits precede the wall-alternate launch. Final joint results, figures, ledger, replay and manuscript proposal remain pending.
+
+
+### 2026-09-13 19:00 UTC — contextual-alternate verified wait
+
+The same supervisor session19207 remained live on direct polling before the18:58:51 UTC filename inventory. That inventory records contextual primary1920/1920, wall primary1792/1792, contextual alternate160/480 and wall alternate0/448, with zero unexpected files. Both primary cohorts retain independent technical approval. Script41 metadata-only readiness finished18:59:04 UTC with160/480 and four metadata inputs, result_contents_read:false: tmp/confirmation_contextual_alternate_readiness_20260913T185851Z.json (SHA256 b2c43a1a03320c56808960e5939469b7f2da3f52146fe5795bfc5705929d2d00). All44 inference files and7 independently reviewed reporting source/test files remain byte-identical. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T185951Z/. No partial contextual-alternate raw results, attempts or worker logs were opened; no source, model settings, frozen plan, tests, cohort order or scientific analysis changed. Goal remains active; contextual-alternate closure and complete automated/independent technical audits precede the wall-alternate launch. Final joint results, figures, ledger, replay and manuscript proposal remain pending.
+
+
+### 2026-09-13 19:33 UTC — contextual-alternate verified wait
+
+The same supervisor session19207 remained live on direct polling before the19:33:02 UTC filename inventory. That inventory records contextual primary1920/1920, wall primary1792/1792, contextual alternate248/480 and wall alternate0/448, with zero unexpected files. Both primary cohorts retain independent technical approval. Script41 metadata-only readiness finished19:33:20 UTC with249/480 and four metadata inputs, result_contents_read:false: tmp/confirmation_contextual_alternate_readiness_20260913T1933Z.json (SHA256 c2995b16f06e6e82dfce2e56a09e427cacaf880858bd15758321fe53faae2b6e). All44 inference files and7 independently reviewed reporting source/test files remain byte-identical. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T193412Z/. No partial contextual-alternate raw results, attempts or worker logs were opened; no source, model settings, frozen plan, tests, cohort order or scientific analysis changed. Goal remains active; contextual-alternate closure and complete automated/independent technical audits precede the wall-alternate launch. Final joint results, figures, ledger, replay and manuscript proposal remain pending.
+
+
+### 2026-09-13 20:00 UTC — contextual-alternate verified wait
+
+The same supervisor session19207 remained live on direct polling before the19:59:20 UTC filename inventory. That inventory records contextual primary1920/1920, wall primary1792/1792, contextual alternate297/480 and wall alternate0/448, with zero unexpected files. Both primary cohorts retain independent technical approval. Script41 metadata-only readiness finished19:59:31 UTC with298/480 and four metadata inputs, result_contents_read:false: tmp/confirmation_contextual_alternate_readiness_20260913T195920Z.json (SHA256 fdda3b938c04f94181f25dde31a3b36bf7a332012aae983b817a2fdaaf5d5052). All44 inference files and7 independently reviewed reporting source/test files remain byte-identical. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T200016Z/. No partial contextual-alternate raw results, attempts or worker logs were opened; no source, model settings, frozen plan, tests, cohort order or scientific analysis changed. Goal remains active; contextual-alternate closure and complete automated/independent technical audits precede the wall-alternate launch. Final joint results, figures, ledger, replay and manuscript proposal remain pending.
+
+
+### 2026-09-13 20:30 UTC — contextual-alternate verified wait
+
+The same supervisor session19207 remained live on direct polling before the20:28:51 UTC filename inventory. That inventory records contextual primary1920/1920, wall primary1792/1792, contextual alternate375/480 and wall alternate0/448, with zero unexpected files. Both primary cohorts retain independent technical approval. Script41 metadata-only readiness finished20:29:25 UTC with377/480 and four metadata inputs, result_contents_read:false: tmp/confirmation_contextual_alternate_readiness_20260913T202851Z.json (SHA256 86b39d69cf59cd992a5ba319eaa5422535e1b229df57f25ec1e3dc0d2dfbe900). All44 inference files and7 independently reviewed reporting source/test files remain byte-identical. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T203012Z/. No partial contextual-alternate raw results, attempts or worker logs were opened; no source, model settings, frozen plan, tests, cohort order or scientific analysis changed. Goal remains active; contextual-alternate closure and complete automated/independent technical audits precede the wall-alternate launch. Final joint results, figures, ledger, replay and manuscript proposal remain pending.
+
+
+### 2026-09-13 21:00 UTC — contextual-alternate verified wait
+
+The same supervisor session19207 remained live on direct polling before the20:59:19 UTC filename inventory. That inventory records contextual primary1920/1920, wall primary1792/1792, contextual alternate432/480 and wall alternate0/448, with zero unexpected files. Both primary cohorts retain independent technical approval. Script41 metadata-only readiness finished20:59:30 UTC with432/480 and four metadata inputs, result_contents_read:false: tmp/confirmation_contextual_alternate_readiness_20260913T205919Z.json (SHA256 542f7a8318a2ad83330a77931625e6dbdc08023da6ff54e3371e6dd115601ab5). All44 inference files and7 independently reviewed reporting source/test files remain byte-identical. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T210015Z/. No partial contextual-alternate raw results, attempts or worker logs were opened; no source, model settings, frozen plan, tests, cohort order or scientific analysis changed. Goal remains active; contextual-alternate closure and complete automated/independent technical audits precede the wall-alternate launch. Final joint results, figures, ledger, replay and manuscript proposal remain pending.
+
+
+### 2026-09-13 21:39 UTC — contextual alternate approved; final wall alternate launched
+
+Contextual-alternate supervisor19207 closed exit0 at21:16:57 UTC with480 exact files and zero unexpected; worker_finished21:16:56 reports completed480/errors0. Automated_v1 SHA256 bf72bf885f9648983be2026f282dc973bbaaffe7e0f555fb5e56b0dc113eff76 and independent review SHA256 23918af70dffcaac8d0a77219e695ba4cd3c9d6022c3ff107599a79febe79764 clear480 technical rows,415 native completions and65 retained caps,64 identity replays and64 full-write norm gates. Coordinator closure SHA256 4a6f762feb753dc336044165d0d941ad723523fbef8cb9708e35699a464afe02 and589-input verification SHA256 06d2cd113d30e3b7eedef3a0f922b87512203802ca3c1ec83a129d69ba5deb82 bind the evidence. Both preparation/source versions remain preserved; no runtime/reporting/result/fixed-tolerance change and no partial third-cohort outcome reads. Final wall alternate448 launched under supervisor87505 at21:35:13 UTC, worker_started21:36:12 UTC; supervisor96510, worker/group96513, lease173fba750d5b45ea949e8800feddbd2b. Fourth execution record SHA256 3d2ec6bda64bef625956ce07e56842327604152c1c3e5baa00e21123d5d790ea binds all three prior approvals. Metadata readiness records1/448 at21:36:45 UTC (SHA256 7237af66c7666d5c6cdfe3baa299f2172dcf4e4364148f4f7b66d3f2a696347a); no wall-alternate raw results, attempts or logs have been opened. All44 inference files and7 reporting source/test files remain unchanged. STATUS/README/integration prior bytes preserved in research/activation_causality/checkpoints/20260913T213950Z/. Goal remains active; final complete audits, joint results/figures/ledger/replay/proposal remain pending. No scientific confirmation claim or global analysis has been made.
+
+
+### 2026-09-13 22:02 UTC — wall alternate verified wait; audit prepared
+
+The same supervisor session 87505 remained live on direct polling before the 22:00:22 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1792/1792, contextual alternate 480/480 and wall alternate 60/448, with zero unexpected files. All three completed cohorts retain independent technical approval. Script41 metadata-only readiness finished 22:00:33 UTC with 61/448 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_alternate_readiness_20260913T220022Z.json (SHA256 d20c16c6a012a031a5001aca94f89b059f7c7c0da1990adf658a46dfb08f452b). All 44 inference files and seven independently reviewed reporting source/test files remain byte-identical. The reviewer prepared the final audit without execution or raw reads: preparation SHA256 fcd50ff0255143b960eee4323a06609ff1b2346b17f2e99fb20acc41243c0c3c, source SHA256 adc0cf7e0943a2d3799a21c4f65b8476d3a8dce6be41095c2bc838e24957ac28. Its 11 metadata/source/diagnosis inputs were rehashed; no basis arrays or weights were read. Exact closure and complete automated/independent technical review remain required. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T220225Z/. No partial wall-alternate raw results, attempts or logs were opened; no frozen plan, inference/reporting source, tests or statistical analysis changed. The goal remains active; final joint results, figures, ledger, replay and the separate paper proposal remain pending.
+
+
+### 2026-09-13 22:30 UTC — wall alternate verified wait
+
+The same supervisor session 87505 remained live on direct polling before the 22:29:32 UTC filename inventory. That inventory records contextual primary 1920/1920, wall primary 1792/1792, contextual alternate 480/480 and wall alternate 146/448, with zero unexpected files. All three completed cohorts retain independent technical approval. Script41 metadata-only readiness finished 22:29:44 UTC with 146/448 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_alternate_readiness_20260913T222932Z.json (SHA256 dbd463170bce867548a8234198a7d5c78709d42f4c288fd2b5f7934c15d18d2a). All 44 inference files and seven independently reviewed reporting source/test files remain byte-identical. The held final audit remains prepared and unexecuted, with no raw reads: preparation SHA256 fcd50ff0255143b960eee4323a06609ff1b2346b17f2e99fb20acc41243c0c3c, source SHA256 adc0cf7e0943a2d3799a21c4f65b8476d3a8dce6be41095c2bc838e24957ac28. Its 11 metadata/source/diagnosis inputs were rehashed; no basis arrays or weights were read. Exact closure and complete automated/independent technical review remain required. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T223047Z/. No partial wall-alternate raw results, attempts or logs were opened; no frozen plan, inference/reporting source, tests or statistical analysis changed. The goal remains active; final joint results, figures, ledger, replay and the separate paper proposal remain pending.
+
+
+### 2026-09-13 23:04 UTC — wall alternate verified wait and scientific-audit preparation
+
+The same supervisor session 87505 remained live on direct polling before the 23:03:03 UTC filename inventory, recording contextual primary 1920/1920, wall primary 1792/1792, contextual alternate 480/480 and wall alternate 231/448, with zero unexpected files. All three completed cohorts retain independent technical approval. Script41 metadata-only readiness finished 23:02:39 UTC with 227/448 and four metadata inputs, result_contents_read:false: tmp/confirmation_wall_alternate_readiness_20260913T230200Z.json (SHA256 2c99e0e3bd728cc7122d17d4e19c5c91747d6d5805b4ff132b9dbb61c507b675). All 44 inference files and seven independently reviewed reporting source/test files remain unchanged. The final technical audit remains prepared and unexecuted, with its 11 metadata/source/diagnosis inputs rehashed. The reviewer prepared the joint scientific checklist (SHA256 f422f35c3e10eb9fd87b77f0d5369d647e8bec8f8ee770ad10505de4d912d1c2); the coordinator found a wall-only fallback error in its v1 metadata record. The original was preserved, the diagnosis published (SHA256 a2ed784ca1ca46d46b9c568c8189034747c489db7fc01baa78af0145f047d50a), and v2 corrects only the contextual-primary counts/weights (SHA256 2b2233dcbe5666899a838ba93776c6769823b749e2878175dad759de5434fbc9). The coordinator rehashed all 26 v2 inputs and independently recomputed all four dataset family inventories, confirming primary43/43/42, contextual same32 11/11/10 and wall128/32. This is static preparation with no outcome analysis or scientific approval. No runtime/reporting code, tests, frozen settings, model weights, partial wall-alternate raw results, attempts or logs were changed/read. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T230451Z/. Final technical closure, joint results, independent scientific review, figures, ledger, replay, final archive and separate paper proposal remain pending; the goal remains active.
+
+
+### 2026-09-13 23:31 UTC — wall alternate verified wait
+
+Supervisor session 87505 remained live on direct polling before the 23:30:16 UTC filename inventory, recording contextual primary 1920/1920, wall primary 1792/1792, contextual alternate 480/480 and wall alternate 324/448, with zero unexpected files. All three completed cohorts retain independent technical approval. Script41 metadata-only readiness finished 23:30:16 UTC with 324/448, four metadata inputs and result_contents_read:false: tmp/confirmation_wall_alternate_readiness_20260913T233000Z.json (SHA256 a5ffee011ee78102046e9e30d54d2398f28969d95d7d78eb12a20a1f8d4669a6). All 44 inference and seven independently reviewed reporting source/test files remain unchanged. The held technical audit remains unexecuted, with 11 metadata/source/diagnosis inputs rehashed; corrected scientific preparation v2 remains unexecuted, with 26 inputs rehashed and all four frozen family inventories checked. No raw wall-alternate results, attempts, logs, model weights, scientific effects or significance were read/computed. No fixed source, test, plan, threshold or endpoint changed. Prior STATUS preserved in research/activation_causality/checkpoints/20260913T233113Z/. Final technical closure, joint results, independent scientific audit, figures, whole search ledger, replay, final archive and separate paper proposal remain pending; the goal remains active.
+
+
+### 2026-09-14 00:01 UTC — wall alternate verified wait
+
+Supervisor session 87505 remained live on direct polling before the 00:00:27 UTC filename inventory, recording contextual primary 1920/1920, wall primary 1792/1792, contextual alternate 480/480 and wall alternate 397/448, with zero unexpected files. All three completed cohorts retain independent technical approval. Script41 metadata-only readiness finished 00:00:27 UTC with 397/448, four metadata inputs and result_contents_read:false: tmp/confirmation_wall_alternate_readiness_20260914T000000Z.json (SHA256 7d97b041d21b915f138af7c60452ddedda9aa089abe55b9fcb4478fcf1a2c6f1). All 44 inference and seven independently reviewed reporting source/test files remain unchanged. The held technical audit remains unexecuted, with 11 metadata/source/diagnosis inputs rehashed; corrected scientific preparation v2 remains unexecuted, with 26 inputs rehashed and all four frozen family inventories checked. No raw wall-alternate results, attempts, logs, model weights, scientific effects or significance were read/computed. No fixed source, test, plan, threshold or endpoint changed. Prior STATUS preserved in research/activation_causality/checkpoints/20260914T000107Z/. Final technical closure, joint results, independent scientific audit, figures, whole search ledger, replay, final archive and separate paper proposal remain pending; the goal remains active.
+
+
+### 2026-09-14 00:40 UTC — all confirmation cohorts technically approved; joint reporting started
+
+Final supervisor87505 closed exit0 at2026-09-14T00:27:12.665582+00:00, exact448/448 and worker_finished448/errors0. Its terminal SHAe68ed96fbe806c3df5fbe611af472f0938b90840ad426cb06fa2f40b37da3899, automated audit SHA3bebb10518413eda99234a38086a5d71898ccfd0da0c43ff5d256c952d05982f and independent certificate SHA9b2516957065a27623e3f965f82b9b3750a7bca318465ec624398bb07e01108f are preserved. Coordinator verified537 automated inputs and556 independent inputs+8 references,44 runtime and7 reporting pins; record SHA17c3827cd889df674875594594500a2f5f6f7a474297415db90002bcd8a9289d permits joint reporting. All4640 trials are technically complete,4090 native completions+550 retained caps,256 independent layouts with same32 alternates. No wall-alternate partial raw/attempt/log read occurred before closure. All model sessions are closed and no further frozen inference is queued. The single combined report completed CPU40218exit0: JSON58851e926cfb64ba3cf19dc7e6c1ba6da622cffd8bf7392eb10b3bda42e0277d, Markdowncf95f99fe19717df78fa9af517f704e321658afb94a94f4248fdf09429144ac9. Independent scientific reconstruction and claim review are underway. Whole ledgerv4 completed CPU42179exit0,36specs, observed unchanged snapshot00:33:00–00:33:12UTC; ledger labels do not replace admissibility audits. Documented CPU reproduction completed9 commands at00:37:14UTC under closed10531; execution SHA64bbf0a0f51ac52d79df482824bf3ec3db88fac86cfd9c3ef227a6a7a6d55752, numerical/provenance comparison and figure replay pending. Prior3docs preserved in research/activation_causality/checkpoints/20260914T003830Z/. Integration record outputs/activation_causality/campaign_20260912/reviews/all_cohorts_technical_closure_integration_v1.json SHA461e891d859abb19acfe6ce32d751795f14d8ea782ba0a6b62696f025021e8b6. The goal remains active for independent scientific approval, production figures, full replay, ledger/archive integration and separately reviewed paper proposal. The main PDF is unchanged.
+
+
+### 2026-09-14 00:53 UTC — theory handoff verified; pre-model numerical launch failure
+
+Automatic monitoring detected all four exact filename sets at00:34:48 and then the owner's00:40 whole-queue closure at00:41:09. All four independent technical certificates and substantive owner closure were separately reviewed; handoff acceptance SHA0dc88e8f1c1c1ee535405115aaa00cef45da3d382bcef9cc38bd3c94b7844d63 binds the exact preserved release. Fresh complete process validation passed00:46:40. Numerical v1 launched once00:47:25 under exact ticket40aac794b7e0fef2b9ffc4ecfd46639cfda45bf3c37c25824786e616e3430e7a, session51511,parent410,child/group415. It acquired the shared lock and verified release, then failed startup identity before model loading and closed exit1 at00:47:33 with owned_group_closed=true, no signals or cleanup errors.
+
+The coordinator mistakenly set PYTHONDONTWRITEBYTECODE=1 alongside-B, while the accepted startup recorded it unset. Independent CPU captures prove that with the variable unset the full accepted startup matches; only that environment leaf and semantic digest differ with1. No observed source/hook drift, engine construction/loading, forward/sample, worker/numerical event or accepted result exists. The original consumed claim and output are preserved; no retry or frozen-source mutation occurred. This is a pre-model invocation failure, not a scientific null. Diagnosis: research/theory_foundations/reviews/N2_PRELOAD_ENVIRONMENT_FAILURE_20260914.md. Machine record: research/theory_foundations/registry/autoresume_numerical_failure_20260914.json. A separate unapplied recovery proposal is being prepared, with all original scientific settings, failed paths and deadlines retained. Both metadata watchers exited after successful single notifications; actual resource handoff is resolved. Accepted science/manuscript, source paper, prior runtime/queue and persistent goal storage remain unchanged.
+
+
+## Activation causality — independent scientific and presentation closure (2026-09-14T01:09:10.926590+00:00)
+
+All four frozen confirmation cohorts are closed and independently technically approved: 4,640 executions, 4,090 final actions, 550 retained caps; 256 independent layouts plus 64 same-layout rendering repeats. Exact joint report58851e926cfb64ba3cf19dc7e6c1ba6da622cffd8bf7392eb10b3bda42e0277d passed independent scientific audit7293b7c49709ac2546bb090539e419e25b624335b532ddfb8d454e10e751a09e. Both contextual and wall primary AND criteria pass; contextual descriptive alternate transfer passes and fixed wall rank1 transfer fails. No abstract-belief, necessity, mediation or invariance conclusion is established.
+
+Documented CPU audits/report replay and production/replay figures passed; scientific report fields match except timestamp, Markdown/PNG bytes and PDF text/rendered pixels match. Final manuscript and figure claim review12faa358508a0c353f0d88f5e6be826cb90182dbf8ee4ce25f2473ba46b5caf9 approved. Main PDF unchanged. Ledger v4 independent reviewd9c9b05697292008e6c01c46d88cd8779120acce856ea529957ed8d4314a2e0a verifies36 specs and7,643 captured payloads. Reviewer-only metadata/rounding and coordinator-only ledger path/cardinality mistakes remain preserved without production/scientific changes.
+
+Final findings and separate proposed causal section are in research/activation_causality. Current guides and README are integrated; source-import verifier passes. Final evidence archive and independent package review remain before goal completion. No active model worker; all four supervisor handles are closed.
+
+
+### 2026-09-14 01:12 UTC — theory startup recovery proposal reviewed, unapplied
+
+The specific source-freeze exception is ready for user review. The unapplied one-file stages.py patch permits only numerical_startup_recovery_v1, requires independently accepted evidence for the exact preserved pre-model environment failure, and preserves all model/scientific inputs, original failed paths, watchdog and deadlines. It does not provide generic retries or numerical acceptance. Author and independent reviewer each passed all10 focused scratch tests; the reviewer also passed git apply --check without applying, original/proposed diff equality and all7 historical pins. All99 tracked runtime sources were checked unchanged. Live stages.py remains8c5006c8aca80c2d422b704fb7b86d60a9800d73737e29b1f45d864ffdcf14ae. Patchf9659b1be52de889a6a1b41e6225fa65ac4fe007befa1c5403e62697688974e0 would produceeada64580b104c03db5795a8796bec768fb2541ff0eb30b7110c4e4a46c3a448. Independent review: research/theory_foundations/reviews/N2_STARTUP_RECOVERY_PROPOSAL_REVIEW_20260914.md. State: research/theory_foundations/registry/startup_recovery_approval_request_20260914.json. No source mutation, new acceptance/ticket, model operation or recovery launch occurred. Explicit exception is required by the current automated wake-up's source-mutation prohibition; fresh independent stage/runtime and launch gates still precede a subsequent attempt.
+
+
+## Activation causality — final evidence delivered (2026-09-14T01:19:23.919636+00:00)
+
+Independent archive review011986182c4825ee961f46b3a2fc1166c11f06e64081640b23e2c46dbd518968 approved all9,633payloads; archiveSHAee8c543bf23515271d62a3866ba69815ca3b3b02e565de0a86d35408620b99e7, manifestSHAb7085086a74e3f23d81b3a72367ebf1b9a9cc0f9fa60cd8fd7ccc0261c05ee56. Exact documented archive verification passed. All research, source, manuscript and packaging work is complete. Final findings, paper proposal, figures and evidence package are linked from research/activation_causality/STATUS.md. The original PDF is unchanged. Eighteen harmless staged cache extras are documented in a sidecar; archived bytes remain intact. Final requirement audit and persistent-goal status update follow as separate release records.
+
+
+### 2026-09-14 07:14 UTC — theory external evidence integrated; recovery remains unapplied
+
+Renewed source-free coordination revalidated the independently accepted whole-queue handoff against a fresh complete765-process capture at07:08:24UTC. No relevant theory model worker or watcher was observed. The saved projection is explicitly not reusable launch clearance; the default model lock was not acquired and no model operation occurred. No resource watcher was rearmed because the release dependency is resolved. Resource record: outputs/theory_foundations/campaign_20260912T174516Z/coordinator_analysis/resume_review_20260914T0710/resource_revalidation.json.
+
+The actual independent startup-failure acceptance0ed793c00d8d7214804b100a86acfbfa3c2c98bcf4e6ef33aefcda01712a1151 binds12original artifacts, the environment-only diagnosis and separate reviews. Root rehashed all16references and checked the exact eight-file original execution inventory. No engine construction, model load, forward or sample occurred in v1. Its original consumed claim/output remain preserved. The reviewed one-file recovery remains unapplied under the latest automated wake-up source-mutation prohibition; no exception was fabricated or model retry attempted.
+
+Newly delivered external confirmation report58851e926cfb64ba3cf19dc7e6c1ba6da622cffd8bf7392eb10b3bda42e0277d and independent scientific certificate7293b7c49709ac2546bb090539e419e25b624335b532ddfb8d454e10e751a09e support a separate theory supplement: research/theory_foundations/theory/EXTERNAL_CAUSAL_EVIDENCE_20260914.md, SHAd10b62431d0685645eecc1582c280241eb1f04d502beca1c539722a734ec013d. Empirical independently checked numerical transcription, provenance and inference scope with no correction; reviewSHAe99134702a2c0b22fae5ceb8a63c68305e816360fdcacfe787561145230f81a9. It connects native input-activation control and rendering dependence to H1/H2/H3 while leaving belief/utility identification, report-action dissociation and reasoning-time commitment unresolved. External results remain confirmation for their own campaign, observed after N2's freeze; no N2 adaptation or substitution occurs.
+
+Evidencev6 and hypothesesv5 integrate the accepted supplement and correct superseded operational statuses. Prior snapshots and coordinator documents are preserved. Original PDF, accepted theory PDF/ZIP and live stages.py were rehashed unchanged. No source mutations, new tests, raw confirmation/log reads or model operations occurred. Numerical gate, full pilot, timing-only final sizing, native evaluation and final integration remain. Persistent goal status/storage and both15Septembercutoffs are unchanged. Progress record: research/theory_foundations/registry/resume_source_free_progress_20260914T0714.json SHA3a22e182c03e30a11371bf638910c9bd0165b10f662c142dc42f4d249209bf8b.
+
+
+### 2026-09-14 07:54 UTC — theory recovery failed before numerical gate; import diagnosis
+
+14 September 07:54 UTC — runtime import failure under investigation. The first reviewed recovery was applied and independently accepted, captured under a fresh identity, and launched once at 07:38:22 UTC. It passed the pre-load identity check but stopped at 07:38:44 with `Startup activation multiplicity/order differs from the reviewed loaders`. The parent certifies exit 1 and owned-group closure with no signals or cleanup errors. Engine loading may have completed; this is not a zero-load failure. The frozen numerical gate did not start, and no numerical result, pilot or evaluation exists. Both consumed launch claims and exact failed output directories remain preserved.
+
+The independent failure record is `run/reviews/n2_recovery_load_guard_failure_20260914_v1.json` (SHA256 `41f139a514cbf0eaf992b6d35ac4ae45c73c6761a7580c69cd1c36ef70a31dff`). A separate no-engine import diagnostic reproduced the failure: importing MLX-LM adds the installed `six` finder and imports optional packages outside the declared dependency inventory. Diagnostic `run/coordinator_analysis/runtime_hook_diagnostic_20260914_v1/diagnostic.json` is SHA256 `333803bb259f6797eff597f1fe62ea4c73ba03f1afcc9df486b55ab2a402c0e7`; it is diagnosis only, not a numerical gate. The agents are preparing an unapplied, narrowly bounded runtime correction and independent review. No further live runtime source has changed since the previously authorized exact `stages.py` repair. The earlier interpretation record scopes that repair; the visible automated user message prohibits source mutations, so any additional proposed source exception must be made concrete before requesting it.
+
+Fresh complete process metadata and the default shared lock revalidated the independently accepted whole-queue release at 07:54:15 UTC. Record: `run/coordinator_analysis/resume_review_20260914T0752/resource_revalidation.json`, SHA256 `f14ec5e970affaf507b0494bb9132d982333459190e00a39a77a3009c1677359`. That observation is historical, not reusable launch clearance. The queue dependency is resolved and no resource watcher is needed. The current obstacle is the runtime guard. Numerical gate → independent closed review → full 44-job technical pilot → timing-only final N → native evaluation → final integration remain required. No original paper, prior campaign, scientific settings or deadlines changed. Inference cutoff 15 September 11:45:16 UTC; reporting deadline 15 September 17:45:16 UTC.
+
+
+
+### 2026-09-14 08:03 UTC — theory repair authority clarification
+
+**Authority clarification — 14 September 08:03 UTC:** the restored conversation records a later user continuation directing the agent to improve or replace existing work as needed. That later instruction authorizes necessary reviewed repairs in the theory workspace. The coordinator's 07:54 note read the older watcher restriction too narrowly; its extra permission dependency is withdrawn. The [interpretation record](registry/import_recovery_authorization_interpretation_20260914.json) preserves this correction without inventing a separate human yes. The three-file runtime proposal remains unapplied until independent technical review. Source snapshots, fresh actual identity acceptance, a complete no-model import/tokenizer rehearsal and every numerical/scientific gate still precede inference. Original paper, prior campaign, settings and deadlines remain protected.
+
+
+
+### Theory import-recovery application — 2026-09-14 08:22 UTC
+
+**The reviewed three-file import correction is applied.** At 08:20:21 UTC the exact combined patch changed only `native_study/identity.py`, `guards.py` and `stages.py`. Root verified all 99 prior source records before application and exactly those three changes afterward; all 46 protected files and both failed attempts remain preserved. The independently accepted proposal passed 33 focused checks and resolved the 54-distribution metadata inventory, with all original 34 records unchanged.
+
+Actual new stage: `run/coordinator_analysis/n2_registration/numerical_import_recovery_v1/stage.json`, SHA256 `270a0b5bf066192400768b892103ba21de58f6f20c42cde47fcb0ab9b196c5ee`. It changes only ID/output/evidence reference from the original numerical stage; every scientific setting is identical. Live stage validation passes all 34 preserved-failure input references. Applied record SHA256 `183e56e043e7a2ca89de8f0e1ffccb1ab3d9e4a4c19f75a4cf95d0bc6f3ecc4d`; source snapshot SHA256 `f079caa530b563879cd2feee69b88a4e0c95196bccd2e92a0fd8e00c2fbf76f8`.
+
+Independent amendment **v2**, SHA256 `5ba4cb9ba55c9362e50d722d0723439e2b4d7de24ce2d218398f51e583baf756`, corrects only v1's placement of two machine audit references in a human-review-only path list. V1 remains preserved; no source or scientific correction followed. The human [proposal review](reviews/N2_IMPORT_RECOVERY_PROPOSAL_REVIEW_20260914.md) is SHA256 `401cd5d0287ebcec901f19327a0257e641dff7f8b70933dbe6316c8d8158df1e`.
+
+The actual pristine startup capture completed with exit 0 and no framework import, engine construction or weight read. `numerical_import_recovery_v1/startup_closure_v1.json` is SHA256 `36b35e758de29b54bc19eff9c0654eb2c98e25f2dfd92d9793d4b32cda8d3576`. Independent actual-stage and startup reviews are underway. Next: fresh actual candidate capture/audit under current whole-queue process validation and default lock, then the exact candidate-bound no-model import/tokenizer rehearsal with its 600-second supervisor and independent closed acceptance. Only afterward may a new numerical ticket be formed.
+
+No new model operation has occurred since the preserved 07:38 import-guard failure; that failure may have loaded the engine but produced zero frozen numerical operations. No numerical acceptance, pilot or native evaluation exists. Numerical gate → independent closed review → full technical pilot → timing-only final N → native evaluation → final integration remain mandatory. The later user repair authorization remains effective; no new permission dependency was introduced. Original paper, prior campaign, scientific settings and fixed **15 September 11:45:16 UTC inference cutoff / 17:45:16 UTC research deadline** are unchanged.
+
+
+
+### Theory no-model rehearsal failure — 2026-09-14 08:39 UTC
+
+**The complete no-model rehearsal stopped on a virtual module filename; no model was constructed and no numerical claim was consumed.** Owned session 9527 closed with exit 1 at 08:34:39 UTC; the parent certifies group closure, no signals and no cleanup errors. The saved initial checkpoint passes. At the after-import checkpoint, startup and interpreter checks returned, then the ordinary-origin guard attempted to resolve Torch's virtual `_ops.py` label as a file in the repository. No complete after-import receipt was published, and the tokenizer branch was not reached.
+
+Parent: `run/coordinator_analysis/n2_no_model_import_rehearsal_20260914_v1/supervisor_terminal.json`, SHA256 `95644fbc6684123d12529757e094177413940d71de5092ceff66686a63e98974`. Rehearsal: `worker/rehearsal.json`, SHA256 `0115eceba7497c41568e22205f112296f1e7b7ef4caf3011700c1ea0f465d86d`. Both are closed, preserved diagnostics, not numerical or scientific nulls. Coordinator record: `coordinator_failure_record.json`, SHA256 `30d346c7cd8e446e4f887cec2b40efc0d853fc1636be7dcc094481d8562937e1`.
+
+The candidate remains intact: file SHA256 `09e9dbe869a54e997a9f6fcf2b80ab4a801561ddb63609566f230468e0d023be`, semantic `12d61367ad6b4482ed21c9a9a739b280d16267e8440fc8cce83e35be702b881f`, core `75ae5a77a3410dd1bdef70e225d1b56317f3372245f0705eb2d043dc3bef1d0f`. The independent byte audit passed 31,282 paths, 114 trees, 54 dependencies, all 99 sources, 46 protected files and all three existing weight shards. Byte-only acceptance SHA256 `3f49bdb494be5672a8f7f85456609e2d54ead573fe1be3431db361a2c78ef12e`; it does not accept the imported phase or authorize inference. Capture session 79016 and independent audit session 7579 also closed successfully.
+
+The agents are independently reviewing the exact failure and preparing **one comprehensive no-engine module-origin census**, including the existing local tokenizer branch. It will collect all ordinary/unbound/virtual/nonfile origins using static attribute inspection and preserve guard exceptions as failures. It is explicitly diagnostic, supervised for 600 seconds, and requires fresh whole-queue process metadata and the default lock. It cannot manufacture a guard pass. All current sources, prior failed attempts, candidate and rehearsal remain preserved while the next narrowly reviewed virtual-module correction is prepared.
+
+The later user authorization covers necessary reviewed theory-workspace repairs; no new permission dependency is introduced. The numerical gate, independent closed review, full pilot, timing-only size selection, native evaluation and final integration remain mandatory. No source/scientific tolerance, input, seed or deadline has been relaxed. Inference ends **15 September 11:45:16 UTC**; research deadline **15 September 17:45:16 UTC**.
+
+
+
+### Theory-foundations closed no-model import census — 2026-09-14T08:54:04.739801+00:00
+
+Owned session 87278 closed exit 0; full framework/static-origin/local-tokenizer census completed under fresh whole-queue process validation and default lock. No model, weight payload, forward or sample. Diagnostic SHA256 aba42a1c3e13f7fa942f951858acc9d0d75b2f70a48962213ef051f319ae4aa7; parent a798700c6e7f2a3c1a6ed94d31552fc3ef79e94dfb7b16a849bb9b6217c09fd2. This is collection completion only; independent review, guards-only virtual-origin correction, fresh candidate and strict rehearsal remain before numerical clearance. Existing goal/deadlines/science/original paper unchanged.
+
+
+### Theory-foundations exact virtual-origin correction — 2026-09-14 09:04:40 UTC
+
+Applied only guards.py SHA c72cdb48319eb698a20b1b983526cf366efb7927acb3bef34c09d141c52df440 after independent amendment v3 SHA60897238e2d708294359c8dd19b0ed281a1ec66d4b24cf20ce581820fbec8ab5. All 99 prior sources and 46 protected hashes checked; numerical scientific fields unchanged. stage_v2.json SHAe05fd27ac3b9870566c091ad653c12081f8f6b3482c4a80be11d5bdf637775bb; numerical claim absent. Actual-stage/candidate review and full strict rehearsal remain before ticket. No model operation; original paper, other campaign and fixed deadlines preserved.
+
+
+### Theory-foundations repaired identity and strict rehearsal — 2026-09-14 09:15 UTC
+
+Candidate v2 SHA8c0d411a7985cb1dc9a73698a8dc6c4d8f9c5f04e9ce1b38e761e30c2fd86f9b/core30926b624d301864a65ed540e45efe3892d8d476e4bab79af764b4cb295b3e3f passed independent complete byte audit. Strict no-model rehearsal v2 session37056 closed exit0; full import/tokenizer/startup/origin checks passed, zero model operations. Raw parent SHA78d9c8bf36c9dc72f6b4dfe1a9c15bcca681d9bf56d5283ed13b14162588e6a0; rehearsal99679bb48638e98a2b219238b826b596015b798e9f34a6679f0b0aaf0e6d8df8. Independent closed rehearsal/final identity acceptance and exact numerical ticket/precheck remain before inference. Existing goal and fixed deadlines unchanged.
+
+
+### Theory-foundations fixed numerical gate launched — 2026-09-14 09:20:52 UTC
+
+Root session40064 is running; one claim SHAe626a8f65fe5b00773102dc24b9c13efc054e8134cced3a228fb0cfd08fe655d, exact ticketd3a25a52493466a9e64874b95549f9b99a14f54886906d5fe878feaede1ddbd6. Complete identity/rehearsal acceptance and fresh standalone/prelaunch/default-lock checks precede this unchanged1800s numerical gate. No running raw outcomes read; no numerical acceptance or pilot. All native source/core/science/deadlines fixed.
+
+
+### Theory-foundations numerical gate closed — 2026-09-14 09:27:22 UTC
+
+Root session40064 returned exit0. Parent b224ab046dcb63301298b6d20c16b1c9362dbfd5e8101456e33b59d3c73595ef closed09:22:45.147UTC,243.429s, groupclosed/no errors. Worker9d28ae2c40796d4fd8bf35ca8ccbaf3706636ea4e5c5cd097780f8506fb655ba reports1/1complete/no missing. Root read closed metadata only. Independent CPU numerical reconstruction now authorized; successful process completion is not yet numerical acceptance and does not launch the pilot. Native core/science/deadlines unchanged.
+
+
+### Theory-foundations numerical acceptance and pilot launch — 2026-09-14 09:45 UTC
+
+Independent numerical acceptance e13a979e… passed111forwards/88samples/15logitcomparisons(max0). Fixed44jobpilot now running root69644, launched09:44:04UTC through unchanged7200s supervisor. Ticket33dfa2a…, claimaa950712…, candidate3567c574… retains numericalcore30926b. Independent stage/identity/ticket checks and fresh793row/defaultlock/startup/source precheck passed. No partialpilot outcomes read; all44technical review and timing-onlyN remain before nativeevaluation. Fixed deadlines and sources preserved.
+
+
+### Theory-foundations pilot closed — 2026-09-14 09:56 UTC
+
+Root69644exit0; parentb0a37750… closed09:53:45UTC after581.328s, groupclosed/noerrors. Workerf1d480ef… accepted44/44. Technicalprojection18c7aad4… completed99941exit0,19nativecaps/1complete,bothprefix64, no scientificeffectsread. Independentall44reviewpending; finalNunset. Transparentclockmetadata supplementdb3b87c0… independentlymatched; no runtime/sciencechange. Numericalcore30926b/fixeddeadlines preserved.
+
+
+### Theory-foundations final N64 and evaluation preparation — 2026-09-14 10:13 UTC
+
+Pilotf0a9bd70… and strict timing4cabb975… independentlyaccepted. Single sizing64f94886… at10:03:08UTC selectsN64, fullcap/factor2 forecast31702.058s, reserve3600s. Independentacceptanceaa6c101e… and arithmeticfe6ccadc… agree. Evaluationstagec429d9e9…/acceptance0f617167… binds64layouts/1408jobs/704seeds/all11poolartifacts. Fresh lockedcandidatecapture99655exit0 yields0a8c2abd… with unchangedcore30926b. Identityreviewpending, no evalclaim/modelyet; all deadlines unchanged.
+
+## Theory foundations — 2026-09-14 10:47 UTC
+
+Evaluation v1 prelaunch stopped before claim/model work: full ticket validation imported the fixture-preparation chain and duplicated ROOT in sys.path. Independently verified diagnostic SHA256 22695c6267626a36d582b8668f70aa7ce8a82de33aaceb7bd8f83ff8ace035a1. Original stage/candidate/ticket preserved; no evaluation output/claim. Unapplied stages-only bridge proposal SHA256 01e18e39951f7a346eba0ca14840593ae8b33484bb10eea6c529dbbc45ee58ba is under independent review. Numerical/pilot acceptances and the single N64 timing selection remain intact; fresh true source identity and complete no-model rehearsal required. No goal-status/deadline change.
+
+## Theory foundations — 2026-09-14 10:59 UTC
+
+Applied independently accepted stages-only administrative bridge9c23f11c… at10:59:08.066UTC. Exact source75899c65…, actualstage_v2 1a0ccfab…, appliedrecord b3544c81…. Other98sources/46protected unchanged; all scientific settings and N64 preserved. Historical core30926b is retained as historical; required actual new core55efba1d. No evaluation claim/output or model work. Actual stage/candidate/rehearsal acceptance gates follow; deadlines/goal status unchanged.
+
+## Theory foundations — 2026-09-14 11:09 UTC
+
+Actual candidate84cab03c…/core55efba1d… capture61175 closed; preliminary independentidentity4f59c4ea… passed257currentrecords and retained/newinputs. Supervised complete no-model evaluation rehearsal42489 closed exit0 at11:08:40UTC (7.525seconds), fourstartup/interpreter/origin checkpoints/fullticketexpecteddenial/exacttokenizer passed. Parentafaa57eb…, normalizedae89b1f1…, workere9629683…, rootwitness1424b53f…. Independentclosedreview/finalidentity pending. No evaluationclaim/model; N64/pilot/numerical/deadlines preserved.
+
+## Theory foundations — 2026-09-14 11:20 UTC
+
+Single N64/1408-job evaluation running in root22492, parent22781/child22784; claim49b391…consumed11:17:01UTC, finalticket0e301/core55ef. Independentclosedrehearsal31bfa2/finalidentityaa3f8 accepted; standalone140f29…passed fresh821-rowprocess/defaultlock/startup/257records/sameNfit. No partialscientificoutcomes/logs read. One-shot completionwatcher root22751/PID23097started11:18:21UTC, source224e/config86e8/configaccept3afa; same-thread terminal-stat/cutoff wake, onequeueattempt/noinference. STATUS/readiness and immutableevidence_v8 record continuation through closedanalysis, independentrecomputation, figures and finalmanuscript. No goalstatus/deadline change or additionalmodel allowed.
+
+
+## Theory foundations — 2026-09-14 11:48 UTC
+
+Progress during the running N64 evaluation: fresh complete process metadata confirms the single parent/worker and completion watcher; both owned sessions still returned running at 11:47:54 UTC. No partial scientific outcomes/logs, new inference or native-source mutation. Completed full visual review of the preserved 28-page proof (7e4869c5…), independently accepted the factual manuscript/readable-Markdown proposal, and assembled a separate 144-file derivative (manifest 75e29154…; root verification cf1ef129…). The reproduction guide and 296-file proposed inventory make all final missing slots and original-IRL/local-runtime limits explicit. The independent delivery audit needs no extra experiment. Existing goal remains active; fixed cutoff/deadline and the post-closure analysis, independent acceptance, figures and final package requirements are unchanged. Machine checkpoint under coordinator_analysis/manuscript_preparation_review_20260914_v1/.
+
+
+## Theory foundations — 2026-09-14 12:06 UTC
+
+Progress: physically collected 514 evidence payloads (205,449,417 bytes) and independently verified every source/copy and exact 517-file set; collection 81098676…, review 723003d8…. Historical versus preparation/current-copy hashes remain distinct. Combined provisional claim map de036212… accepted by 7eddc083…: 14 archival rows preserved, external/coverage evidence and three account syntheses added, N2 outcomes remain null. Both live evaluation/watcher sessions returned running at 12:04:40 UTC; no partial outcomes/logs, inference retry or native-source change. Separate frozen-source N2 methods preparation is in progress. Goal/deadlines and required closed scientific/final-publication work remain unchanged. Machine checkpoint: coordinator_analysis/final_collection_checkpoint_20260914_v1/checkpoint.json.
+
+
+## Theory foundations — 2026-09-14 12:20 UTC
+
+Progress: accepted separate N2 methods V2 (MD11448e30…, TeXbd370ea0…, manifest4d26206c…, revieweab1f9eb…) preserves all equations/settings and clarifies three prose points. Six displays,57math instances,17refs independently checked. Final assembly addendum now consolidates all accepted inputs. Outcome-independent preparation is complete. Both owned evaluation/watcher sessions returned running through12:20:08UTC; no current scientific outcomes/logs, new inference or native-source mutation. Next is actual closure and the preserved analysis/reconstruction/result-acceptance/figures/final-package path. Existing goal/deadlines unchanged; verified live waiting does not authorize another audit, study, model or watcher.
+
+
+## Theory foundations — 2026-09-14 16:02 UTC
+
+Progress: single N64 evaluation closed15:55:02UTC, root22492 exit0 and owned group closed, verified by fresh833-row process inventory and root witness5343e221…. All1408planned jobs present, no technical missing/failure. Unchanged closed analysis45049 exit0 produced manifest844bae20… and result1b7886a3…. Independent actual provenance/recomputation/acceptance and provisional frozen-template interpretation are in progress. Completion watcher22751 exited0 after one queue attempt, delivery unverified, no retry. No new inference/source mutation. Existing goal/deadlines unchanged; final figures, integrated manuscript and full evidence/PDF/package review remain required. Machine checkpoint: coordinator_analysis/n2_evaluation_closed_checkpoint_20260914_v1/checkpoint.json.
+
+2026-09-14 16:40 UTC - Theory foundations N2 independently accepted (012377f9); all 1,408 jobs technically complete, all 22,533 reconstructed numerical fields match to floating-point precision. Separate final manuscript integrates reviewed results and compiles to 35 pages. Final PDF/source/package review underway, no inference remains needed. Goal remains active; fixed deadlines and original sources preserved. Checkpoint: outputs/theory_foundations/campaign_20260912T174516Z/coordinator_analysis/final_assembly_checkpoint_20260914_v1/checkpoint.json.
+
+Timestamp correction for the immediately preceding theory-foundations final-assembly entry: the machine checkpoint was actually created at 2026-09-14 16:31:53.586162 UTC; its hand-written 16:40 label was a transcription error. STATUS and runtime-readiness headings corrected to 16:31. Scientific records and actual event timestamps are unchanged.
+
+2026-09-14T16:56:11.597511+00:00 - Theory-foundations research and final V3 delivery complete. Original paper preserved. Four independently checked archival studies, separate external native evidence and accepted N64 evaluation integrated into35-page revision. Final scientific/PDF review a37854ba; anchor addendum55c064bf; independent package acceptance ed249d99. Delivered ZIP d47714cc,120154253bytes; all3788files/157directories,441filetargets+5anchors passed, extracted verifier exit0. Current README/STATUS/runtime-readiness and evidence_v9 updated. No inference or watcher work remains. Existing goal closure is recorded via public tool next, without replacement or internal storage edits. Delivery: outputs/theory_foundations/campaign_20260912T174516Z/final_revision_20260914_v1/DELIVERY.md.
+
+2026-09-14T16:56:17+00:00 - Public update_goal(status=complete) confirmed completion of the EXISTING theory-foundations goal01a096af-e145-7360-9e27-aa1ff02642f6. No replacement goal or internal storage edit. Exact public-tool receipt: outputs/theory_foundations/campaign_20260912T174516Z/final_revision_20260914_v1/GOAL_COMPLETION.json; SHA256 ed615cf0b2d2394e01617eae68b076535a67caa0130a99e3e6726da0841d4a71. Tracked working time51490seconds; no token budget was set. Final delivery and accepted V3 package remain unchanged.
+
+
+2026-09-14T18:27:07.403054+00:00 - Activation-causality presentation rewrite complete at user request. Added a nine-page explanatory paper (research/activation_causality/PAPER_REPORT.md and output/pdf/activation_causality_paper.pdf), with background/problem, a worked counterfactual grid example, intervention diagrams, experimental design, results, discussion and complete condition appendices. Independent narrative/figure review and all-nine-page visual QA passed; records are in research/activation_causality/paper_assets/. Original manuscript and certified final report/proposal preserved. No new model queries, statistical reanalysis or goal change.
+
+
+2026-09-24T20:30:40.090901+00:00 - Downloaded SPAR-Telos/reveng branch feat/counterfactual-patching at user request into reveng/ as a separate Git checkout. Origin: https://github.com/SPAR-Telos/reveng.git. Verified HEAD d862d146081756990559db78dfae0b6062eb2d8d, clean working tree, and tracking origin/feat/counterfactual-patching; single-branch clone with full branch history. Git LFS smudge disabled during acquisition. No dependencies installed or model inference run.
